@@ -30,9 +30,9 @@ Where:
 * `path` - is path to *.tact contract file it will be used when `yarn build` run. 
 * `output` - is path to building files when yarn build run. `yarn test` & `yarn deploy` use these output files. 
 
-In this way you can use template project to play with Tact smart contract examples from [examples](https://github.com/ton-community/tact/tree/main/examples). Good luck!🍀🚀
+In this way you can use template project to play with Tact smart contract examples from [examples](https://github.com/tact-lang/tact/tree/main/examples). Good luck!🍀🚀
 
-[Tact documentation.](https://github.com/ton-community/tact/blob/main/docs/overview.md)
+[Tact documentation.](https://github.com/tact-lang/tact/blob/main/docs/overview.md)
 
 ## Licence
 
