@@ -32,8 +32,6 @@ Where:
 
 In this way you can use template project to play with Tact smart contract examples from [examples](https://github.com/tact-lang/tact/tree/main/examples). Good luck!🍀🚀
 
-[Tact documentation.](https://github.com/tact-lang/tact/blob/main/docs/overview.md)
-
 ## Licence
 
 MIT
