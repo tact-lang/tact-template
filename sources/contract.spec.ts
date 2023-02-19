@@ -12,7 +12,7 @@ describe("contract", () => {
         let track = system.track(contract.address);
         await contract.send(owner, { value: toNano(1) }, { $$type: "Deploy", queryId: 0n });
         await system.run();
-        expect(track.events()).toMatchInlineSnapshot(`
+        expect(track.collect()).toMatchInlineSnapshot(`
             [
               {
                 "type": "deploy",
@@ -60,7 +60,7 @@ describe("contract", () => {
         // Increment counter
         await contract.send(owner, { value: toNano(1) }, "increment");
         await system.run();
-        expect(track.events()).toMatchInlineSnapshot(`
+        expect(track.collect()).toMatchInlineSnapshot(`
             [
               {
                 "message": {
@@ -89,7 +89,7 @@ describe("contract", () => {
         // Non-owner
         await contract.send(nonOwner, { value: toNano(1) }, "increment");
         await system.run();
-        expect(track.events()).toMatchInlineSnapshot(`
+        expect(track.collect()).toMatchInlineSnapshot(`
             [
               {
                 "message": {
