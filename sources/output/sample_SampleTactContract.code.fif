@@ -12,6 +12,8 @@ PROGRAM{
   DECLPROC __gen_read_Add
   DECLPROC __gen_write_SampleTactContract
   DECLPROC __gen_read_SampleTactContract
+  DECLPROC __gen_read_$init$SampleTactContract
+  DECLPROC $__gen_SampleTactContract_init
   DECLPROC __gen_load_SampleTactContract
   DECLPROC __gen_store_SampleTactContract
   DECLPROC $send
@@ -22,9 +24,11 @@ PROGRAM{
   DECLPROC $__gen_SampleTactContract_receive_Add
   DECLPROC $__gen_SampleTactContract_receive_comment_c4f8d72312edfdef5b7bec7833bdbb162d1511bd78a912aed0f2637af65572ae
   DECLPROC $__gen_SampleTactContract_receive_Deploy
+  DECLPROC __gen_router_SampleTactContract
   DECLPROC recv_internal
   113617 DECLMETHOD supported_interfaces
   DECLPROC get_abi_ipfs
+  DECLPROC lazy_deployment_completed
   DECLGLOBVAR __tact_context
   DECLGLOBVAR __tact_context_sys
   __tact_not_null PROCINLINE:<{
@@ -71,7 +75,7 @@ PROGRAM{
     32 STU
     64 STU
   }>
-  __gen_writecell_DeployOk PROCREF:<{
+  __gen_writecell_DeployOk PROCINLINE:<{
     NEWC
     SWAP
     __gen_write_DeployOk INLINECALLDICT
@@ -97,20 +101,38 @@ PROGRAM{
     32 LDU
     -ROT
   }>
+  __gen_read_$init$SampleTactContract PROCINLINE:<{
+    __tact_load_address INLINECALLDICT
+  }>
+  $__gen_SampleTactContract_init PROCREF:<{
+    0 PUSHINT
+  }>
   __gen_load_SampleTactContract PROCINLINE:<{
     c4 PUSH
     CTOS
     LDREF
     SWAP
     __tact_context_sys SETGLOB
-    __gen_read_SampleTactContract INLINECALLDICT
-    1 2 BLKDROP2
+    1 LDI
+    SWAP
+    IF:<{
+      __gen_read_SampleTactContract INLINECALLDICT
+      1 2 BLKDROP2
+    }>ELSE<{
+      __gen_read_$init$SampleTactContract INLINECALLDICT
+      SWAP
+      ENDS
+      $__gen_SampleTactContract_init INLINECALLDICT
+    }>
   }>
   __gen_store_SampleTactContract PROCINLINE:<{
     NEWC
     __tact_context_sys GETGLOB
     SWAP
     STREF
+    TRUE
+    SWAP
+    1 STI
     -ROT
     __gen_write_SampleTactContract INLINECALLDICT
     ENDC
@@ -256,7 +278,7 @@ PROGRAM{
     __gen_writecell_DeployOk INLINECALLDICT
     $reply INLINECALLDICT
   }>
-  recv_internal PROC:<{
+  __gen_router_SampleTactContract PROCREF:<{
     c2 SAVE
     SAMEALTSAVE
     0 PUSHINT
@@ -269,6 +291,48 @@ PROGRAM{
       32 PLDU
     }>
     s0 s2 XCHG
+    IFJMP:<{
+      2DROP
+      TRUE
+    }>
+    OVER
+    2278832834 PUSHINT
+    EQUAL
+    IFJMP:<{
+      NIP
+      __gen_read_Add INLINECALLDICT
+      NIP
+      $__gen_SampleTactContract_receive_Add INLINECALLDICT
+      TRUE
+    }>
+    OVER
+    2490013878 PUSHINT
+    EQUAL
+    IFJMP:<{
+      NIP
+      __gen_read_Deploy INLINECALLDICT
+      NIP
+      $__gen_SampleTactContract_receive_Deploy INLINECALLDICT
+      TRUE
+    }>
+    SWAP
+    0 EQINT
+    IF:<{
+      HASHSU
+      89092981215441470209245890604563109773385607357076622359718516871332286001838 PUSHINT
+      EQUAL
+      IFJMP:<{
+        $__gen_SampleTactContract_receive_comment_c4f8d72312edfdef5b7bec7833bdbb162d1511bd78a912aed0f2637af65572ae INLINECALLDICT
+        TRUE
+        RETALT
+      }>
+    }>ELSE<{
+      DROP
+    }>
+    FALSE
+  }>
+  recv_internal PROC:<{
+    SWAP
     CTOS
     4 LDU
     SWAP
@@ -283,60 +347,27 @@ PROGRAM{
     SWAP
     LDMSGADDR
     s2 PUSH
-    s6 s6 XCHG2
+    s5 s5 XCHG2
     4 TUPLE
     __tact_context SETGLOB
-    s0 s2 XCHG
-    IFJMP:<{
-      2DROP
-    }>
-    DUP
-    2278832834 PUSHINT
-    EQUAL
-    IFJMP:<{
-      DROP
-      __gen_load_SampleTactContract INLINECALLDICT
-      s0 s2 XCHG
-      __gen_read_Add INLINECALLDICT
-      NIP
-      s1 s2 XCHG
-      $__gen_SampleTactContract_receive_Add INLINECALLDICT
-      __gen_store_SampleTactContract INLINECALLDICT
-    }>
-    DUP
-    2490013878 PUSHINT
-    EQUAL
-    IFJMP:<{
-      DROP
-      __gen_load_SampleTactContract INLINECALLDICT
-      s0 s2 XCHG
-      __gen_read_Deploy INLINECALLDICT
-      NIP
-      s1 s2 XCHG
-      $__gen_SampleTactContract_receive_Deploy INLINECALLDICT
-      __gen_store_SampleTactContract INLINECALLDICT
-    }>
-    0 EQINT
-    IF:<{
-      HASHSU
-      89092981215441470209245890604563109773385607357076622359718516871332286001838 PUSHINT
-      EQUAL
-      IFJMP:<{
-        __gen_load_SampleTactContract INLINECALLDICT
-        $__gen_SampleTactContract_receive_comment_c4f8d72312edfdef5b7bec7833bdbb162d1511bd78a912aed0f2637af65572ae INLINECALLDICT
-        __gen_store_SampleTactContract INLINECALLDICT
-        RETALT
-      }>
-    }>ELSE<{
-      DROP
-    }>
-    130 THROW
+    __gen_load_SampleTactContract INLINECALLDICT
+    2SWAP
+    __gen_router_SampleTactContract INLINECALLDICT
+    DROP
+    __gen_store_SampleTactContract INLINECALLDICT
   }>
   supported_interfaces PROC:<{
     123515602279859691144772641439386770278 PUSHINT
     209801025412363888721030803524359905849 PUSHINT
+    42980537499636128163026532310500881091 PUSHINT
   }>
   get_abi_ipfs PROC:<{
     x{697066733a2f2f516d584636464b5a71636534783772363565426d5875436e63367150766867474d506732506867737444504c5572} PUSHSLICE
+  }>
+  lazy_deployment_completed PROC:<{
+    c4 PUSH
+    CTOS
+    1 LDI
+    SWAP
   }>
 }END>c
