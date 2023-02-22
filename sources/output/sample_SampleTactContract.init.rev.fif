@@ -8,11 +8,9 @@ SETCP0
     NEWC
     STREF
     s0 s2 XCHG
-    <{
-      ROTREV
-      STSLICER
-      32 STU
-    }> CALLREF
+    ROTREV
+    STSLICER
+    32 STU
     ENDC
 
   107886: 

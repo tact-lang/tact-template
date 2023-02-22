@@ -1,5 +1,9 @@
+#pragma version =0.4.1;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
 () __tact_verify_address(slice address) inline {
-    throw_unless(134, address.slice_bits() != 267);
+    throw_unless(136, address.slice_bits() != 267);
 }
 
 builder __tact_store_address(builder b, slice address) inline {
@@ -8,7 +12,7 @@ builder __tact_store_address(builder b, slice address) inline {
     return b;
 }
 
-builder __gen_write_SampleTactContract(builder build_0, (slice, int) v) inline_ref {
+builder __gen_write_SampleTactContract(builder build_0, (slice, int) v) inline {
     var (v'owner, v'counter) = v;
     build_0 = __tact_store_address(build_0, v'owner);
     build_0 = build_0.store_uint(v'counter, 32);

@@ -16,7 +16,7 @@ import {
     TupleBuilder,
     DictionaryValue
 } from 'ton-core';
-import { ContractSystem, ContractExecutor } from 'ton-emulator';
+import { ExecutorEngine, getDefaultExecutorEngine } from '@tact-lang/runtime';
 
 export type StateInit = {
     $$type: 'StateInit';
@@ -308,7 +308,7 @@ function dictValueParserAdd(): DictionaryValue<Add> {
         }
     }
 }
-async function SampleTactContract_init(owner: Address) {
+async function SampleTactContract_init(owner: Address, opts?: { engine?: ExecutorEngine }) {
     const __init = 'te6ccgEBBgEALwABFP8A9KQT9LzyyAsBAgFiAgMCAs0EBQAJoUrd4AkAAdQAF9OAFkZgEs54tlj+TA==';
     const __code = 'te6ccgECDgEAAjcAART/APSkE/S88sgLAQIBYgIDA/LQ7aLt+3Ah10nCH5UwINcLH94C0NMDAXGwwAGRf5Fw4gH6QCJQZm8E+GECkVvgIIIQh9Q6wrqOtDDtRNDUAfhi+kABAdMfWWwSAtMfAYIQh9Q6wrry4IHTHwExEts8yPhCAcxZWc8Wyx/J7VTgIIIQlGqYtrrjAsAACgQFAgFqCwwCbDDtRNDUAfhi+kABAdMfWWwSAtMfAYIQlGqYtrry4IHTPwExEts82zzI+EIBzFlZzxbLH8ntVAYHAaaOy/kBgvDE+NcjEu3971t77HgzvbsWLRURvXipEq7Q8mN69lVyrrqOo+1E0NQB+GL6QAEB0x9ZbBJx2zzI+EIBzFlZzxbLH8ntVNsx4JEw4vLAggoAHMgBghCv+Q9XWMsfyz/JAST4QW8kECNfA38CcIBCWG1t2zwIAfbIcQHKAVAHAcoAcAHKAlAFzxZQA/oCcAHKaCNusyVus7GOTH8BygDIcAHKAHABygAkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDiJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4nABygACfwHKAALJWMyXMzMBcAHKAOIhbrMJADCcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wAAHvhBbyRbgRFNMiTHBfL0oAEpt0MdqJoagD8MX0gAIDpj6y2CW2eQDQBNt3owTgudh6ullc9j0J2HOslQo2zQThO6xqWlbI+WZFp15b++LEcwAAIx';
     const __system = 'te6cckECEAEAAkEAAQHAAQEFoebTAgEU/wD0pBP0vPLICwMCAWIIBAIBagYFAE23ejBOC52Hq6WVz2PQnYc6yVCjbNBOE7rGpaVsj5ZkWnXlv74sRzABKbdDHaiaGoA/DF9IACA6Y+stgltnkAcAAjED8tDtou37cCHXScIflTAg1wsf3gLQ0wMBcbDAAZF/kXDiAfpAIlBmbwT4YQKRW+AgghCH1DrCuo60MO1E0NQB+GL6QAEB0x9ZbBIC0x8BghCH1DrCuvLggdMfATES2zzI+EIBzFlZzxbLH8ntVOAgghCUapi2uuMCwAAPCgkBpo7L+QGC8MT41yMS7f3vW3vseDO9uxYtFRG9eKkSrtDyY3r2VXKuuo6j7UTQ1AH4YvpAAQHTH1lsEnHbPMj4QgHMWVnPFssfye1U2zHgkTDi8sCCDwJsMO1E0NQB+GL6QAEB0x9ZbBIC0x8BghCUapi2uvLggdM/ATES2zzbPMj4QgHMWVnPFssfye1UDgsBJPhBbyQQI18DfwJwgEJYbW3bPAwB9shxAcoBUAcBygBwAcoCUAXPFlAD+gJwAcpoI26zJW6zsY5MfwHKAMhwAcoAcAHKACRus51/AcoABCBu8tCAUATMljQDcAHKAOIkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDicAHKAAJ/AcoAAslYzJczMwFwAcoA4iFusw0AMJx/AcoAASBu8tCAAcyVMXABygDiyQH7AAAcyAGCEK/5D1dYyx/LP8kAHvhBbyRbgRFNMiTHBfL0oDDG3Pk=';
@@ -319,9 +319,8 @@ async function SampleTactContract_init(owner: Address) {
     let __stack = builder.build();
     let codeCell = Cell.fromBoc(Buffer.from(__code, 'base64'))[0];
     let initCell = Cell.fromBoc(Buffer.from(__init, 'base64'))[0];
-    let system = await ContractSystem.create();
-    let executor = await ContractExecutor.create({ code: initCell, data: new Cell() }, system);
-    let res = await executor.get('init', __stack);
+    let executor = opts && opts.engine ? opts.engine : getDefaultExecutorEngine();
+    let res = await executor.get({ method: 'init', stack: __stack, code: initCell, data: new Cell() });
     if (!res.success) { throw Error(res.error); }
     if (res.exitCode !== 0 && res.exitCode !== 1) {
         if (SampleTactContract_errors[res.exitCode]) {
@@ -330,7 +329,7 @@ async function SampleTactContract_init(owner: Address) {
             throw new ComputeError('Exit code: ' + res.exitCode, res.exitCode, { logs: res.logs });
         }
     }
-    let data = res.stack.readCell();
+    let data = new TupleReader(res.stack).readCell();
     return { code: codeCell, data };
 }
 
@@ -363,12 +362,12 @@ const SampleTactContract_errors: { [key: number]: { message: string } } = {
 
 export class SampleTactContract implements Contract {
     
-    static async init(owner: Address) {
-        return await SampleTactContract_init(owner);
+    static async init(owner: Address, opts?: { engine?: ExecutorEngine }) {
+        return await SampleTactContract_init(owner, opts);
     }
     
-    static async fromInit(owner: Address) {
-        const init = await SampleTactContract_init(owner);
+    static async fromInit(owner: Address, opts?: { engine?: ExecutorEngine }) {
+        const init = await SampleTactContract_init(owner, opts);
         const address = contractAddress(0, init);
         return new SampleTactContract(address, init);
     }

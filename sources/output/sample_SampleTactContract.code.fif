@@ -2,6 +2,7 @@ PROGRAM{
   DECLPROC __tact_not_null
   DECLPROC __tact_context_get
   DECLPROC __tact_verify_address
+  DECLPROC __tact_store_bool
   DECLPROC __tact_load_address
   DECLPROC __tact_store_address
   DECLPROC __tact_address_eq
@@ -13,7 +14,6 @@ PROGRAM{
   DECLPROC __gen_read_SampleTactContract
   DECLPROC __gen_load_SampleTactContract
   DECLPROC __gen_store_SampleTactContract
-  DECLPROC $storeBool
   DECLPROC $send
   DECLPROC $reply
   DECLPROC $__gen_SampleTactContract_add
@@ -27,7 +27,7 @@ PROGRAM{
   DECLPROC get_abi_ipfs
   DECLGLOBVAR __tact_context
   DECLGLOBVAR __tact_context_sys
-  __tact_not_null PROC:<{
+  __tact_not_null PROCINLINE:<{
     DUP
     ISNULL
     128 THROWIF
@@ -40,7 +40,11 @@ PROGRAM{
     SBITS
     267 PUSHINT
     NEQ
-    134 THROWIFNOT
+    136 THROWIFNOT
+  }>
+  __tact_store_bool PROCINLINE:<{
+    SWAP
+    1 STI
   }>
   __tact_load_address PROCINLINE:<{
     LDMSGADDR
@@ -52,7 +56,7 @@ PROGRAM{
   __tact_address_eq PROCINLINE:<{
     SDEQ
   }>
-  __gen_read_Deploy PROCREF:<{
+  __gen_read_Deploy PROCINLINE:<{
     32 LDU
     SWAP
     2490013878 PUSHINT
@@ -61,7 +65,7 @@ PROGRAM{
     64 LDU
     SWAP
   }>
-  __gen_write_DeployOk PROCREF:<{
+  __gen_write_DeployOk PROCINLINE:<{
     2952335191 PUSHINT
     ROT
     32 STU
@@ -73,7 +77,7 @@ PROGRAM{
     __gen_write_DeployOk INLINECALLDICT
     ENDC
   }>
-  __gen_read_Add PROCREF:<{
+  __gen_read_Add PROCINLINE:<{
     32 LDU
     SWAP
     2278832834 PUSHINT
@@ -82,18 +86,18 @@ PROGRAM{
     32 LDU
     SWAP
   }>
-  __gen_write_SampleTactContract PROCREF:<{
+  __gen_write_SampleTactContract PROCINLINE:<{
     -ROT
     __tact_store_address INLINECALLDICT
     32 STU
   }>
-  __gen_read_SampleTactContract PROCREF:<{
+  __gen_read_SampleTactContract PROCINLINE:<{
     __tact_load_address INLINECALLDICT
     SWAP
     32 LDU
     -ROT
   }>
-  __gen_load_SampleTactContract PROCREF:<{
+  __gen_load_SampleTactContract PROCINLINE:<{
     c4 PUSH
     CTOS
     LDREF
@@ -102,7 +106,7 @@ PROGRAM{
     __gen_read_SampleTactContract INLINECALLDICT
     1 2 BLKDROP2
   }>
-  __gen_store_SampleTactContract PROCREF:<{
+  __gen_store_SampleTactContract PROCINLINE:<{
     NEWC
     __tact_context_sys GETGLOB
     SWAP
@@ -112,23 +116,13 @@ PROGRAM{
     ENDC
     c4 POP
   }>
-  $storeBool PROC:<{
-    IFJMP:<{
-      -1 PUSHINT
-      SWAP
-      1 STI
-    }>
-    0 PUSHINT
-    SWAP
-    1 STI
-  }>
-  $send PROC:<{
+  $send PROCREF:<{
     NEWC
     1 PUSHINT
     SWAP
     2 STI
     s0 s7 XCHG2
-    $storeBool CALLDICT
+    __tact_store_bool INLINECALLDICT
     0 PUSHINT
     SWAP
     3 STI
@@ -148,49 +142,49 @@ PROGRAM{
     OR
     IF:<{
       TRUE
-      $storeBool CALLDICT
+      __tact_store_bool INLINECALLDICT
       NEWC
       FALSE
-      $storeBool CALLDICT
+      __tact_store_bool INLINECALLDICT
       FALSE
-      $storeBool CALLDICT
+      __tact_store_bool INLINECALLDICT
       s4 PUSH
       ISNULL
       NOT
       IF:<{
         TRUE
-        $storeBool CALLDICT
+        __tact_store_bool INLINECALLDICT
         s0 s4 XCHG
-        __tact_not_null CALLDICT
+        __tact_not_null INLINECALLDICT
         s0 s4 XCHG2
         STREF
       }>ELSE<{
         s4 POP
         s0 s3 XCHG
         FALSE
-        $storeBool CALLDICT
+        __tact_store_bool INLINECALLDICT
       }>
       s4 PUSH
       ISNULL
       NOT
       IF:<{
         TRUE
-        $storeBool CALLDICT
+        __tact_store_bool INLINECALLDICT
         s0 s4 XCHG
-        __tact_not_null CALLDICT
+        __tact_not_null INLINECALLDICT
         s0 s4 XCHG2
         STREF
       }>ELSE<{
         s4 POP
         s0 s3 XCHG
         FALSE
-        $storeBool CALLDICT
+        __tact_store_bool INLINECALLDICT
       }>
       FALSE
-      $storeBool CALLDICT
+      __tact_store_bool INLINECALLDICT
       s0 s2 XCHG
       TRUE
-      $storeBool CALLDICT
+      __tact_store_bool INLINECALLDICT
       s0 s2 XCHG
       ENDC
       ROT
@@ -200,28 +194,28 @@ PROGRAM{
       s3 POP
       SWAP
       FALSE
-      $storeBool CALLDICT
+      __tact_store_bool INLINECALLDICT
     }>
     OVER
     ISNULL
     NOT
     IF:<{
       TRUE
-      $storeBool CALLDICT
+      __tact_store_bool INLINECALLDICT
       SWAP
-      __tact_not_null CALLDICT
+      __tact_not_null INLINECALLDICT
       SWAP
       STREF
     }>ELSE<{
       NIP
       FALSE
-      $storeBool CALLDICT
+      __tact_store_bool INLINECALLDICT
     }>
     ENDC
     SWAP
     SENDRAWMSG
   }>
-  $reply PROC:<{
+  $reply PROCREF:<{
     __tact_context_get INLINECALLDICT
     s2 s3 XCHG
     3 BLKDROP
@@ -232,9 +226,9 @@ PROGRAM{
     ROT
     PUSHNULL
     PUSHNULL
-    $send CALLDICT
+    $send INLINECALLDICT
   }>
-  $__gen_SampleTactContract_add PROC:<{
+  $__gen_SampleTactContract_add PROCREF:<{
     __tact_context_get INLINECALLDICT
     2DROP
     4429 PUSHINT
@@ -244,25 +238,26 @@ PROGRAM{
     THROWANYIFNOT
     ADD
   }>
-  $__gen_SampleTactContract_counter PROC:<{
+  $__gen_SampleTactContract_counter PROCREF:<{
     NIP
   }>
   $__gen_get_counter PROC:<{
     __gen_load_SampleTactContract INLINECALLDICT
-    $__gen_SampleTactContract_counter CALLDICT
+    $__gen_SampleTactContract_counter INLINECALLDICT
   }>
-  $__gen_SampleTactContract_receive_Add PROC:<{
-    $__gen_SampleTactContract_add CALLDICT
+  $__gen_SampleTactContract_receive_Add PROCINLINE:<{
+    $__gen_SampleTactContract_add INLINECALLDICT
   }>
-  $__gen_SampleTactContract_receive_comment_c4f8d72312edfdef5b7bec7833bdbb162d1511bd78a912aed0f2637af65572ae PROC:<{
+  $__gen_SampleTactContract_receive_comment_c4f8d72312edfdef5b7bec7833bdbb162d1511bd78a912aed0f2637af65572ae PROCINLINE:<{
     1 PUSHINT
-    $__gen_SampleTactContract_add CALLDICT
+    $__gen_SampleTactContract_add INLINECALLDICT
   }>
-  $__gen_SampleTactContract_receive_Deploy PROC:<{
+  $__gen_SampleTactContract_receive_Deploy PROCINLINE:<{
     __gen_writecell_DeployOk INLINECALLDICT
-    $reply CALLDICT
+    $reply INLINECALLDICT
   }>
   recv_internal PROC:<{
+    c2 SAVE
     SAMEALTSAVE
     0 PUSHINT
     OVER
@@ -305,7 +300,7 @@ PROGRAM{
       __gen_read_Add INLINECALLDICT
       NIP
       s1 s2 XCHG
-      $__gen_SampleTactContract_receive_Add CALLDICT
+      $__gen_SampleTactContract_receive_Add INLINECALLDICT
       __gen_store_SampleTactContract INLINECALLDICT
     }>
     DUP
@@ -318,7 +313,7 @@ PROGRAM{
       __gen_read_Deploy INLINECALLDICT
       NIP
       s1 s2 XCHG
-      $__gen_SampleTactContract_receive_Deploy CALLDICT
+      $__gen_SampleTactContract_receive_Deploy INLINECALLDICT
       __gen_store_SampleTactContract INLINECALLDICT
     }>
     0 EQINT
@@ -328,7 +323,7 @@ PROGRAM{
       EQUAL
       IFJMP:<{
         __gen_load_SampleTactContract INLINECALLDICT
-        $__gen_SampleTactContract_receive_comment_c4f8d72312edfdef5b7bec7833bdbb162d1511bd78a912aed0f2637af65572ae CALLDICT
+        $__gen_SampleTactContract_receive_comment_c4f8d72312edfdef5b7bec7833bdbb162d1511bd78a912aed0f2637af65572ae INLINECALLDICT
         __gen_store_SampleTactContract INLINECALLDICT
         RETALT
       }>
@@ -342,6 +337,6 @@ PROGRAM{
     209801025412363888721030803524359905849 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d594b7a3756334270706a66383268734d475943514157707470433462346a7956594c6b6e6351616a5268674e} PUSHSLICE
+    x{697066733a2f2f516d584636464b5a71636534783772363565426d5875436e63367150766867474d506732506867737444504c5572} PUSHSLICE
   }>
 }END>c

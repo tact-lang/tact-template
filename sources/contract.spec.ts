@@ -12,44 +12,49 @@ describe("contract", () => {
         let track = system.track(contract.address);
         await contract.send(owner, { value: toNano(1) }, { $$type: "Deploy", queryId: 0n });
         await system.run();
-        expect(track.events()).toMatchInlineSnapshot(`
+        expect(track.collect()).toMatchInlineSnapshot(`
             [
               {
-                "type": "deploy",
-              },
-              {
-                "message": {
-                  "body": {
-                    "cell": "x{95973DCC0000000000000000}",
-                    "type": "cell",
-                  },
-                  "bounce": true,
-                  "from": "kQAI-3FJVc_ywSuY4vq0bYrzR7S4Och4y7bTU_i5yLOB3A6P",
-                  "to": "kQCY8hRET2P9ghS3wLorMDazt37aCxg5cGcV0t0rYodDbYFu",
-                  "type": "internal",
-                  "value": 1000000000n,
-                },
-                "type": "received",
-              },
-              {
-                "gasUsed": 8564n,
-                "type": "processed",
-              },
-              {
-                "messages": [
+                "$seq": 0,
+                "events": [
                   {
-                    "body": {
-                      "cell": "x{D37FB8210000000000000000}",
-                      "type": "cell",
+                    "$type": "deploy",
+                  },
+                  {
+                    "$type": "received",
+                    "message": {
+                      "body": {
+                        "cell": "x{946A98B60000000000000000}",
+                        "type": "cell",
+                      },
+                      "bounce": true,
+                      "from": "kQAI-3FJVc_ywSuY4vq0bYrzR7S4Och4y7bTU_i5yLOB3A6P",
+                      "to": "kQBrSAP2y7QIUw4_1q0qciHfqdFmOYR9CC1oinn7kyWWRuoV",
+                      "type": "internal",
+                      "value": 1000000000n,
                     },
-                    "bounce": true,
-                    "from": "kQCY8hRET2P9ghS3wLorMDazt37aCxg5cGcV0t0rYodDbYFu",
-                    "to": "kQAI-3FJVc_ywSuY4vq0bYrzR7S4Och4y7bTU_i5yLOB3A6P",
-                    "type": "internal",
-                    "value": 990240000n,
+                  },
+                  {
+                    "$type": "processed",
+                    "gasUsed": 6077n,
+                  },
+                  {
+                    "$type": "sent",
+                    "messages": [
+                      {
+                        "body": {
+                          "cell": "x{AFF90F570000000000000000}",
+                          "type": "cell",
+                        },
+                        "bounce": true,
+                        "from": "kQBrSAP2y7QIUw4_1q0qciHfqdFmOYR9CC1oinn7kyWWRuoV",
+                        "to": "kQAI-3FJVc_ywSuY4vq0bYrzR7S4Och4y7bTU_i5yLOB3A6P",
+                        "type": "internal",
+                        "value": 992727000n,
+                      },
+                    ],
                   },
                 ],
-                "type": "sent",
               },
             ]
         `);
@@ -60,25 +65,30 @@ describe("contract", () => {
         // Increment counter
         await contract.send(owner, { value: toNano(1) }, "increment");
         await system.run();
-        expect(track.events()).toMatchInlineSnapshot(`
+        expect(track.collect()).toMatchInlineSnapshot(`
             [
               {
-                "message": {
-                  "body": {
-                    "text": "increment",
-                    "type": "text",
+                "$seq": 1,
+                "events": [
+                  {
+                    "$type": "received",
+                    "message": {
+                      "body": {
+                        "text": "increment",
+                        "type": "text",
+                      },
+                      "bounce": true,
+                      "from": "kQAI-3FJVc_ywSuY4vq0bYrzR7S4Och4y7bTU_i5yLOB3A6P",
+                      "to": "kQBrSAP2y7QIUw4_1q0qciHfqdFmOYR9CC1oinn7kyWWRuoV",
+                      "type": "internal",
+                      "value": 1000000000n,
+                    },
                   },
-                  "bounce": true,
-                  "from": "kQAI-3FJVc_ywSuY4vq0bYrzR7S4Och4y7bTU_i5yLOB3A6P",
-                  "to": "kQCY8hRET2P9ghS3wLorMDazt37aCxg5cGcV0t0rYodDbYFu",
-                  "type": "internal",
-                  "value": 1000000000n,
-                },
-                "type": "received",
-              },
-              {
-                "gasUsed": 4669n,
-                "type": "processed",
+                  {
+                    "$type": "processed",
+                    "gasUsed": 3495n,
+                  },
+                ],
               },
             ]
         `);
@@ -89,38 +99,44 @@ describe("contract", () => {
         // Non-owner
         await contract.send(nonOwner, { value: toNano(1) }, "increment");
         await system.run();
-        expect(track.events()).toMatchInlineSnapshot(`
+        expect(track.collect()).toMatchInlineSnapshot(`
             [
               {
-                "message": {
-                  "body": {
-                    "text": "increment",
-                    "type": "text",
+                "$seq": 2,
+                "events": [
+                  {
+                    "$type": "received",
+                    "message": {
+                      "body": {
+                        "text": "increment",
+                        "type": "text",
+                      },
+                      "bounce": true,
+                      "from": "kQCVnZ1On-Ja4xfAfMbsq--jatb5sNnOUN421AHaXbebcCWH",
+                      "to": "kQBrSAP2y7QIUw4_1q0qciHfqdFmOYR9CC1oinn7kyWWRuoV",
+                      "type": "internal",
+                      "value": 1000000000n,
+                    },
                   },
-                  "bounce": true,
-                  "from": "kQCVnZ1On-Ja4xfAfMbsq--jatb5sNnOUN421AHaXbebcCWH",
-                  "to": "kQCY8hRET2P9ghS3wLorMDazt37aCxg5cGcV0t0rYodDbYFu",
-                  "type": "internal",
-                  "value": 1000000000n,
-                },
-                "type": "received",
-              },
-              {
-                "errorCode": 4429,
-                "type": "failed",
-              },
-              {
-                "message": {
-                  "body": {
-                    "type": "empty",
+                  {
+                    "$type": "failed",
+                    "errorCode": 4429,
+                    "errorMessage": "Invalid sender",
                   },
-                  "bounce": false,
-                  "from": "kQCY8hRET2P9ghS3wLorMDazt37aCxg5cGcV0t0rYodDbYFu",
-                  "to": "kQCVnZ1On-Ja4xfAfMbsq--jatb5sNnOUN421AHaXbebcCWH",
-                  "type": "internal",
-                  "value": 995047000n,
-                },
-                "type": "sent-bounced",
+                  {
+                    "$type": "sent-bounced",
+                    "message": {
+                      "body": {
+                        "type": "empty",
+                      },
+                      "bounce": false,
+                      "from": "kQBrSAP2y7QIUw4_1q0qciHfqdFmOYR9CC1oinn7kyWWRuoV",
+                      "to": "kQCVnZ1On-Ja4xfAfMbsq--jatb5sNnOUN421AHaXbebcCWH",
+                      "type": "internal",
+                      "value": 996216000n,
+                    },
+                  },
+                ],
               },
             ]
         `);
