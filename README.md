@@ -17,6 +17,8 @@ To deploy contract you should:
 If you renamed `contract.tact` to something else, you need to update `tact.config.json` correspondingly. For more information , see [Tact Documentation](https://docs.tact-lang.org/language/guides/config)
 ## Testing
 
+Example of contract tests are in `contract.spec.ts`. For more information about testing, see [Tact Documentation](https://docs.tact-lang.org/language/guides/debug)
+
 To add new test files to contract you should create `*.spec.ts` files similar to template's one and they would be automatically included in testing.
 
 ## Licence
