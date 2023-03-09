@@ -680,10 +680,10 @@
     tvm-disassembler "^2.0.0"
     zod "^3.20.2"
 
-"@tact-lang/emulator@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@tact-lang/emulator/-/emulator-2.1.1.tgz#0cebb987499bae7944aca45d890efbc4d59c453c"
-  integrity sha512-BAcErT65CWMsBvSQfP/JHoyKgF84+sNgiwrPizSTZUXpM47ZS+VLv1xnWzydKLYH6geWOAFKJObLObIWKe/kDg==
+"@tact-lang/emulator@^3.2.2":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@tact-lang/emulator/-/emulator-3.2.2.tgz#b80181cdd04500ec489482fd9648dd99a12e22a0"
+  integrity sha512-v5J4hZJ2baUaziUg7MjAaTlOk1lIK9EFMZaQpRN/v9hkqByNNeB9G9pT9/7SrjTgdnUqNxDFjoxjPILSq6p59g==
   dependencies:
     prando "^6.0.1"
     teslabot "^1.5.0"

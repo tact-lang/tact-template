@@ -9,7 +9,8 @@ describe("contract", () => {
         let owner = system.treasure("owner");
         let nonOwner = system.treasure("non-owner");
         let contract = system.open(await SampleTactContract.fromInit(owner.address));
-        let track = system.track(contract.address);
+        system.name(contract.address, "main");
+        let track = system.track(contract);
         await contract.send(owner, { value: toNano(1) }, { $$type: "Deploy", queryId: 0n });
         await system.run();
         expect(track.collect()).toMatchInlineSnapshot(`
@@ -28,8 +29,8 @@ describe("contract", () => {
                         "type": "cell",
                       },
                       "bounce": true,
-                      "from": "kQAI-3FJVc_ywSuY4vq0bYrzR7S4Och4y7bTU_i5yLOB3A6P",
-                      "to": "kQA0B12Z-IVBSmgGwFmKk8bfxldQ7A5Qt3PZPIV65cLwsaux",
+                      "from": "@treasure(owner)",
+                      "to": "@main",
                       "type": "internal",
                       "value": 1000000000n,
                     },
@@ -47,8 +48,8 @@ describe("contract", () => {
                           "type": "cell",
                         },
                         "bounce": true,
-                        "from": "kQA0B12Z-IVBSmgGwFmKk8bfxldQ7A5Qt3PZPIV65cLwsaux",
-                        "to": "kQAI-3FJVc_ywSuY4vq0bYrzR7S4Och4y7bTU_i5yLOB3A6P",
+                        "from": "@main",
+                        "to": "@treasure(owner)",
                         "type": "internal",
                         "value": 990497000n,
                       },
@@ -78,8 +79,8 @@ describe("contract", () => {
                         "type": "text",
                       },
                       "bounce": true,
-                      "from": "kQAI-3FJVc_ywSuY4vq0bYrzR7S4Och4y7bTU_i5yLOB3A6P",
-                      "to": "kQA0B12Z-IVBSmgGwFmKk8bfxldQ7A5Qt3PZPIV65cLwsaux",
+                      "from": "@treasure(owner)",
+                      "to": "@main",
                       "type": "internal",
                       "value": 1000000000n,
                     },
@@ -112,8 +113,8 @@ describe("contract", () => {
                         "type": "text",
                       },
                       "bounce": true,
-                      "from": "kQCVnZ1On-Ja4xfAfMbsq--jatb5sNnOUN421AHaXbebcCWH",
-                      "to": "kQA0B12Z-IVBSmgGwFmKk8bfxldQ7A5Qt3PZPIV65cLwsaux",
+                      "from": "@treasure(non-owner)",
+                      "to": "@main",
                       "type": "internal",
                       "value": 1000000000n,
                     },
@@ -127,11 +128,12 @@ describe("contract", () => {
                     "$type": "sent-bounced",
                     "message": {
                       "body": {
-                        "type": "empty",
+                        "cell": "x{FFFFFFFF00000000696E6372656D656E74}",
+                        "type": "cell",
                       },
                       "bounce": false,
-                      "from": "kQA0B12Z-IVBSmgGwFmKk8bfxldQ7A5Qt3PZPIV65cLwsaux",
-                      "to": "kQCVnZ1On-Ja4xfAfMbsq--jatb5sNnOUN421AHaXbebcCWH",
+                      "from": "@main",
+                      "to": "@treasure(non-owner)",
                       "type": "internal",
                       "value": 994873000n,
                     },
