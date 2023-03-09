@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: SampleTactContract
-BOC Size: 572 bytes
+BOC Size: 850 bytes
 
 # Types
 Total Types: 6
@@ -58,4 +58,5 @@ Total Get Methods: 1
 134: Invalid argument
 135: Code of a contract was not found
 136: Invalid address
+137: Masterchain support is not enabled for this contract
 4429: Invalid sender

@@ -1,5 +1,5 @@
 import { toNano } from "ton";
-import { ContractSystem } from "ton-emulator";
+import { ContractSystem } from "@tact-lang/emulator";
 import { SampleTactContract } from "./output/sample_SampleTactContract";
 
 describe("contract", () => {
@@ -29,14 +29,14 @@ describe("contract", () => {
                       },
                       "bounce": true,
                       "from": "kQAI-3FJVc_ywSuY4vq0bYrzR7S4Och4y7bTU_i5yLOB3A6P",
-                      "to": "kQDkoLLa3W2BbNqXWLNcC_fXrudIYpOVQHijNxDB3i-plKNh",
+                      "to": "kQA0B12Z-IVBSmgGwFmKk8bfxldQ7A5Qt3PZPIV65cLwsaux",
                       "type": "internal",
                       "value": 1000000000n,
                     },
                   },
                   {
                     "$type": "processed",
-                    "gasUsed": 6283n,
+                    "gasUsed": 8307n,
                   },
                   {
                     "$type": "sent",
@@ -47,10 +47,10 @@ describe("contract", () => {
                           "type": "cell",
                         },
                         "bounce": true,
-                        "from": "kQDkoLLa3W2BbNqXWLNcC_fXrudIYpOVQHijNxDB3i-plKNh",
+                        "from": "kQA0B12Z-IVBSmgGwFmKk8bfxldQ7A5Qt3PZPIV65cLwsaux",
                         "to": "kQAI-3FJVc_ywSuY4vq0bYrzR7S4Och4y7bTU_i5yLOB3A6P",
                         "type": "internal",
-                        "value": 992521000n,
+                        "value": 990497000n,
                       },
                     ],
                   },
@@ -79,14 +79,14 @@ describe("contract", () => {
                       },
                       "bounce": true,
                       "from": "kQAI-3FJVc_ywSuY4vq0bYrzR7S4Och4y7bTU_i5yLOB3A6P",
-                      "to": "kQDkoLLa3W2BbNqXWLNcC_fXrudIYpOVQHijNxDB3i-plKNh",
+                      "to": "kQA0B12Z-IVBSmgGwFmKk8bfxldQ7A5Qt3PZPIV65cLwsaux",
                       "type": "internal",
                       "value": 1000000000n,
                     },
                   },
                   {
                     "$type": "processed",
-                    "gasUsed": 3861n,
+                    "gasUsed": 5495n,
                   },
                 ],
               },
@@ -113,7 +113,7 @@ describe("contract", () => {
                       },
                       "bounce": true,
                       "from": "kQCVnZ1On-Ja4xfAfMbsq--jatb5sNnOUN421AHaXbebcCWH",
-                      "to": "kQDkoLLa3W2BbNqXWLNcC_fXrudIYpOVQHijNxDB3i-plKNh",
+                      "to": "kQA0B12Z-IVBSmgGwFmKk8bfxldQ7A5Qt3PZPIV65cLwsaux",
                       "type": "internal",
                       "value": 1000000000n,
                     },
@@ -130,10 +130,10 @@ describe("contract", () => {
                         "type": "empty",
                       },
                       "bounce": false,
-                      "from": "kQDkoLLa3W2BbNqXWLNcC_fXrudIYpOVQHijNxDB3i-plKNh",
+                      "from": "kQA0B12Z-IVBSmgGwFmKk8bfxldQ7A5Qt3PZPIV65cLwsaux",
                       "to": "kQCVnZ1On-Ja4xfAfMbsq--jatb5sNnOUN421AHaXbebcCWH",
                       "type": "internal",
-                      "value": 995953000n,
+                      "value": 994873000n,
                     },
                   },
                 ],
