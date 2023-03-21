@@ -3,19 +3,18 @@ import * as path from 'path';
 import { Address, contractAddress } from "ton";
 import { SampleTactContract } from "./output/sample_SampleTactContract";
 import { prepareTactDeployment } from "@tact-lang/deployer";
-import { createInitPackage } from './utils/createInitPackage';
 
 (async () => {
 
     // Parameters
     let testnet = true;
     let packageName = 'sample_SampleTactContract.pkg';
-    let owner = Address.parse('<put_address_here>');
-    let contractInit = await SampleTactContract.init(owner);
+    let owner = Address.parse('kQBM7QssP28PhrctDOyd47_zpFfDiQvv5V9iXizNopb1d2LB');
+    let init = await SampleTactContract.init(owner);
 
     // Load required data
-    let address = contractAddress(0, contractInit);
-    let data = createInitPackage(contractInit);
+    let address = contractAddress(0, init);
+    let data = init.data.toBoc();
     let pkg = fs.readFileSync(path.resolve(__dirname, 'output', packageName));
 
     // Prepareing
