@@ -1,23 +1,28 @@
-import { Address, beginCell, contractAddress, toNano } from "ton";
-import { SampleTactContract, storeAdd } from "./output/sample_SampleTactContract";
-import { deploy } from "./utils/deploy";
-import { printAddress, printDeploy, printHeader } from "./utils/print";
+import * as fs from 'fs';
+import * as path from 'path';
+import { beginCell } from "ton";
+import { storeAdd } from "./output/sample_SampleTactContract";
+import { prepareTactDeployment } from "@tact-lang/deployer";
 
 (async () => {
 
     // Parameters
-    let owner = Address.parse('some-owner'); // Replace owner with your address
     let packed = beginCell().store(storeAdd({ $$type: 'Add', amount: 10n })).endCell(); // Replace if you want another message used
-    let init = await SampleTactContract.init(owner);
-    let address = contractAddress(0, init);
-    let deployAmount = toNano(10);
-    let testnet = true;
 
-    // Print basics
-    printHeader('SampleTactContract');
-    printAddress(address);
-    // printDeploy(init, deployAmount, packed, testnet);
-    
-    // Do deploy
-    await deploy(init, deployAmount, packed, testnet)
+    // Prepareing
+    console.log('Uploading package...');
+    let prepare = await prepareTactDeployment({
+        pkg: fs.readFileSync(path.resolve(__dirname, 'output', 'sample_SampleTactContract.pkg')),
+        data: packed.toBoc(),
+        testnet: true // Change for mainnet
+    });
+
+    // Deploying
+    console.log("============================================================================================");
+    console.log('Please, follow deployment link')
+    console.log("============================================================================================");
+    console.log();
+    console.log(prepare);
+    console.log();
+    console.log("============================================================================================");
 })();
