@@ -1,23 +1,34 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { beginCell } from "ton";
-import { storeAdd } from "./output/sample_SampleTactContract";
+import { Address, contractAddress } from "ton";
+import { SampleTactContract } from "./output/sample_SampleTactContract";
 import { prepareTactDeployment } from "@tact-lang/deployer";
+import { createInitPackage } from './utils/createInitPackage';
 
 (async () => {
 
     // Parameters
-    let packed = beginCell().store(storeAdd({ $$type: 'Add', amount: 10n })).endCell(); // Replace if you want another message used
+    let testnet = true;
+    let packageName = 'sample_SampleTactContract.pkg';
+    let owner = Address.parse('<put_address_here>');
+    let contractInit = await SampleTactContract.init(owner);
+
+    // Load required data
+    let address = contractAddress(0, contractInit);
+    let data = createInitPackage(contractInit);
+    let pkg = fs.readFileSync(path.resolve(__dirname, 'output', packageName));
 
     // Prepareing
     console.log('Uploading package...');
-    let prepare = await prepareTactDeployment({
-        pkg: fs.readFileSync(path.resolve(__dirname, 'output', 'sample_SampleTactContract.pkg')),
-        data: packed.toBoc(),
-        testnet: true // Change for mainnet
-    });
+    let prepare = await prepareTactDeployment({ pkg, data, testnet });
 
     // Deploying
+    console.log("============================================================================================");
+    console.log('Contract Address')
+    console.log("============================================================================================");
+    console.log();
+    console.log(address.toString({ testOnly: testnet }));
+    console.log();
     console.log("============================================================================================");
     console.log('Please, follow deployment link')
     console.log("============================================================================================");
