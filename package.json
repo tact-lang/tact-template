@@ -8,7 +8,7 @@
   "dependencies": {
     "@tact-lang/compiler": "^1.0.0",
     "@tact-lang/deployer": "^0.2.0",
-    "@tact-lang/emulator": "^3.2.2",
+    "@tact-lang/emulator": "^3.3.1",
     "@types/jest": "^29.2.4",
     "@types/node": "^18.11.14",
     "@types/qs": "^6.9.7",
@@ -20,7 +20,7 @@
     "prettier": "^2.5.1",
     "qs": "^6.11.0",
     "ton": "^13.1.0",
-    "ton-core": ">=0.44.0",
+    "ton-core": ">=0.48.0",
     "ton-crypto": "^3.2.0",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
