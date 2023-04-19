@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: SampleTactContract
-BOC Size: 850 bytes
+BOC Size: 822 bytes
 
 # Types
-Total Types: 6
+Total Types: 7
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -24,6 +24,10 @@ Signature: `Deploy{queryId:uint64}`
 ## DeployOk
 TLB: `deploy_ok#aff90f57 queryId:uint64 = DeployOk`
 Signature: `DeployOk{queryId:uint64}`
+
+## FactoryDeploy
+TLB: `factory_deploy#6d0ff13b queryId:uint64 cashback:address = FactoryDeploy`
+Signature: `FactoryDeploy{queryId:uint64,cashback:address}`
 
 ## Add
 TLB: `add#87d43ac2 amount:uint32 = Add`

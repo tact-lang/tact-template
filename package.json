@@ -6,7 +6,7 @@
     "deploy": "ts-node ./sources/contract.deploy.ts"
   },
   "dependencies": {
-    "@tact-lang/compiler": "^1.0.0",
+    "@tact-lang/compiler": "^1.1.0",
     "@tact-lang/coverage": "^0.0.5",
     "@tact-lang/deployer": "^0.2.0",
     "@tact-lang/emulator": "^3.4.1",
