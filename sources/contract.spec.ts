@@ -32,7 +32,7 @@ describe("contract", () => {
                       "from": "@treasure(owner)",
                       "to": "@main",
                       "type": "internal",
-                      "value": 1000000000n,
+                      "value": "1",
                     },
                   },
                   {
@@ -51,7 +51,7 @@ describe("contract", () => {
                         "from": "@main",
                         "to": "@treasure(owner)",
                         "type": "internal",
-                        "value": 990764000n,
+                        "value": "0.990764",
                       },
                     ],
                   },
@@ -82,7 +82,7 @@ describe("contract", () => {
                       "from": "@treasure(owner)",
                       "to": "@main",
                       "type": "internal",
-                      "value": 1000000000n,
+                      "value": "1",
                     },
                   },
                   {
@@ -106,6 +106,10 @@ describe("contract", () => {
                 "$seq": 2,
                 "events": [
                   {
+                    "$type": "storage-charged",
+                    "amount": "0.000000005",
+                  },
+                  {
                     "$type": "received",
                     "message": {
                       "body": {
@@ -116,7 +120,7 @@ describe("contract", () => {
                       "from": "@treasure(non-owner)",
                       "to": "@main",
                       "type": "internal",
-                      "value": 1000000000n,
+                      "value": "1",
                     },
                   },
                   {
@@ -135,7 +139,7 @@ describe("contract", () => {
                       "from": "@main",
                       "to": "@treasure(non-owner)",
                       "type": "internal",
-                      "value": 995112000n,
+                      "value": "0.995112",
                     },
                   },
                 ],
