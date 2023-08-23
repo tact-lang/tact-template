@@ -113,6 +113,12 @@ forall X0, X1 -> (X0, X1) __tact_tuple_destroy_2(tuple v) asm "2 UNTUPLE";
     return (($self'owner, $self'counter), ());
 }
 
+((slice, int), ()) $SampleTactContract$_fun_reply((slice, int) $self, cell $body) impure inline {
+    var (($self'owner, $self'counter)) = $self;
+    ($self'owner, $self'counter)~$SampleTactContract$_fun_forward(__tact_context_get_sender(), $body, true, null());
+    return (($self'owner, $self'counter), ());
+}
+
 ((slice, int), ()) $SampleTactContract$_fun_notify((slice, int) $self, cell $body) impure inline {
     var (($self'owner, $self'counter)) = $self;
     ($self'owner, $self'counter)~$SampleTactContract$_fun_forward(__tact_context_get_sender(), $body, false, null());

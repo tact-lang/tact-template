@@ -4,6 +4,7 @@
 
 #include "sample_SampleTactContract.headers.fc";
 #include "sample_SampleTactContract.stdlib.fc";
+#include "sample_SampleTactContract.constants.fc";
 #include "sample_SampleTactContract.storage.fc";
 
 ;;
@@ -44,6 +45,7 @@
 ((slice, int), ()) $SampleTactContract$_internal_text_c4f8d72312edfdef5b7bec7833bdbb162d1511bd78a912aed0f2637af65572ae((slice, int) $self) impure inline {
     var ($self'owner, $self'counter) = $self;
     ($self'owner, $self'counter)~$SampleTactContract$_fun_add(1);
+    ($self'owner, $self'counter)~$SampleTactContract$_fun_reply(__gen_cell_comment_3e96a74bf6f672d7e00d5d9c31c1437327e624b173365dc10e024c6410eff184());
     return (($self'owner, $self'counter), ());
 }
 

@@ -24,6 +24,7 @@ PROGRAM{
   DECLPROC $SampleTactContract$_fun_counter
   DECLPROC $SendParameters$_constructor_bounce_to_value_mode_body_code_data
   DECLPROC $SampleTactContract$_fun_forward
+  DECLPROC $SampleTactContract$_fun_reply
   DECLPROC $SampleTactContract$_fun_notify
   DECLPROC $DeployOk$_constructor_queryId
   DECLPROC $SampleTactContract$_internal_binary_Add
@@ -315,6 +316,13 @@ PROGRAM{
     $SendParameters$_constructor_bounce_to_value_mode_body_code_data INLINECALLDICT
     $global_send INLINECALLDICT
   }>
+  $SampleTactContract$_fun_reply PROCINLINE:<{
+    __tact_context_get_sender INLINECALLDICT
+    SWAP
+    TRUE
+    PUSHNULL
+    $SampleTactContract$_fun_forward INLINECALLDICT
+  }>
   $SampleTactContract$_fun_notify PROCINLINE:<{
     __tact_context_get_sender INLINECALLDICT
     SWAP
@@ -330,6 +338,8 @@ PROGRAM{
   $SampleTactContract$_internal_text_c4f8d72312edfdef5b7bec7833bdbb162d1511bd78a912aed0f2637af65572ae PROCINLINE:<{
     1 PUSHINT
     $SampleTactContract$_fun_add INLINECALLDICT
+    B{b5ee9c7241010101001100001e00000000696e6372656d656e7465648430bf20} B>boc PUSHREF
+    $SampleTactContract$_fun_reply INLINECALLDICT
   }>
   $SampleTactContract$_internal_binary_Deploy PROCINLINE:<{
     $DeployOk$_constructor_queryId INLINECALLDICT

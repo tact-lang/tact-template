@@ -78,6 +78,9 @@ builder $SampleTactContract$_store(builder build_0, (slice, int) v) inline;
 ;; $SampleTactContract$_fun_forward
 ((slice, int), ()) $SampleTactContract$_fun_forward((slice, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
 
+;; $SampleTactContract$_fun_reply
+((slice, int), ()) $SampleTactContract$_fun_reply((slice, int) $self, cell $body) impure inline;
+
 ;; $SampleTactContract$_fun_notify
 ((slice, int), ()) $SampleTactContract$_fun_notify((slice, int) $self, cell $body) impure inline;
 
