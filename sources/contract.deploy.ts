@@ -8,8 +8,7 @@ import { prepareTactDeployment } from "@tact-lang/deployer";
     // Parameters
     let testnet = true;
     let packageName = "sample_SampleTactContract.pkg";
-    // let owner = Address.parse('kQBM7QssP28PhrctDOyd47_zpFfDiQvv5V9iXizNopb1d2LB');
-    let owner = Address.parse("kQAWGf7Kbc9-OrZJc0o2EUX-NaY23BDBv6XqsZhE_QBX8CVp");
+    let owner = Address.parse("kQBM7QssP28PhrctDOyd47_zpFfDiQvv5V9iXizNopb1d2LB");
     let init = await SampleTactContract.init(owner);
 
     // Load required data
