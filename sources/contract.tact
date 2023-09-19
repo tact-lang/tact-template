@@ -30,6 +30,7 @@ contract SampleTactContract with Deployable {
 
     receive("increment") {
         self.add(1);
+        self.reply("incremented".asComment());
     }
 
     get fun counter(): Int {
