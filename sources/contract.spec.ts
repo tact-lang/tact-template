@@ -87,7 +87,23 @@ describe("contract", () => {
                   },
                   {
                     "$type": "processed",
-                    "gasUsed": 5082n,
+                    "gasUsed": 8176n,
+                  },
+                  {
+                    "$type": "sent",
+                    "messages": [
+                      {
+                        "body": {
+                          "text": "incremented",
+                          "type": "text",
+                        },
+                        "bounce": true,
+                        "from": "@main",
+                        "to": "@treasure(owner)",
+                        "type": "internal",
+                        "value": "0.990604",
+                      },
+                    ],
                   },
                 ],
               },
@@ -105,10 +121,6 @@ describe("contract", () => {
               {
                 "$seq": 2,
                 "events": [
-                  {
-                    "$type": "storage-charged",
-                    "amount": "0.000000005",
-                  },
                   {
                     "$type": "received",
                     "message": {
