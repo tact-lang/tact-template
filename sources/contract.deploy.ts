@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { Address, contractAddress } from "ton";
+import { Address, contractAddress } from "@ton/core";
 import { SampleTactContract } from "./output/sample_SampleTactContract";
 import { prepareTactDeployment } from "@tact-lang/deployer";
 

@@ -1,4 +1,4 @@
-import { toNano } from "ton";
+import { toNano } from "@ton/core";
 import { ContractSystem } from "@tact-lang/emulator";
 import { SampleTactContract } from "./output/sample_SampleTactContract";
 
@@ -25,8 +25,11 @@ describe("contract", () => {
                     "$type": "received",
                     "message": {
                       "body": {
-                        "cell": "x{946A98B60000000000000000}",
-                        "type": "cell",
+                        "type": "known",
+                        "value": {
+                          "$$type": "Deploy",
+                          "queryId": 0n,
+                        },
                       },
                       "bounce": true,
                       "from": "@treasure(owner)",
@@ -44,8 +47,11 @@ describe("contract", () => {
                     "messages": [
                       {
                         "body": {
-                          "cell": "x{AFF90F570000000000000000}",
-                          "type": "cell",
+                          "type": "known",
+                          "value": {
+                            "$$type": "DeployOk",
+                            "queryId": 0n,
+                          },
                         },
                         "bounce": false,
                         "from": "@main",
