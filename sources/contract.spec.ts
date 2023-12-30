@@ -1,10 +1,25 @@
+<<<<<<< Updated upstream
 import { toNano } from "@ton/core";
 import { ContractSystem } from "@tact-lang/emulator";
+=======
+import { toNano } from "ton";
+// import { ContractSystem } from "@tact-lang/emulator";
+import {
+    Blockchain,
+    SandboxContract,
+    TreasuryContract,
+    printTransactionFees,
+    prettyLogTransactions,
+} from "@ton-community/sandbox";
+import "@ton-community/test-utils";
+
+>>>>>>> Stashed changes
 import { SampleTactContract } from "./output/sample_SampleTactContract";
 
 describe("contract", () => {
     it("should deploy correctly", async () => {
         // Create ContractSystem and deploy contract
+<<<<<<< Updated upstream
         let system = await ContractSystem.create();
         let owner = system.treasure("owner");
         let nonOwner = system.treasure("non-owner");
@@ -164,5 +179,32 @@ describe("contract", () => {
               },
             ]
         `);
+=======
+        let system = await Blockchain.create();
+
+        // Set the address of the contract owner
+        let owner = await system.treasury("owner");
+        let nonOwner = await system.treasury("non-owner");
+
+        let contract = system.openContract(await SampleTactContract.fromInit(owner.address));
+
+        // Deploy contract
+        const deployResult = await contract.send(
+            owner.getSender(),
+            { value: toNano(1) },
+            { $$type: "Deploy", queryId: 0n }
+        );
+
+        // Your 1st test should be to check that the contract was deployed successfully
+        expect(deployResult.transactions).toHaveTransaction({
+            from: owner.address,
+            to: contract.address,
+            deploy: true,
+            success: true,
+        });
+
+        // Check counter
+        expect(await contract.getCounter()).toEqual(0n);
+>>>>>>> Stashed changes
     });
 });
