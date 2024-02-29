@@ -732,6 +732,18 @@
     jssha "3.2.0"
     tweetnacl "1.0.3"
 
+"@ton-community/sandbox@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@ton-community/sandbox/-/sandbox-0.11.0.tgz#411eae67c8f7aca07b6ae8e53233f6c3c21fcbe1"
+  integrity sha512-3tlSprRBTSu9m0tJTC3cl4MXQep1vfNMPqk9+JAXSRJu9ToEvIUVpqO6MQNkbz9LkKDuOEBs5vyqT37DlKKcWw==
+
+"@ton-community/test-utils@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@ton-community/test-utils/-/test-utils-0.3.0.tgz#44e854cd023123d3cb57df3839730b0bc6dac609"
+  integrity sha512-eCw1c6a0TcKwiYEA4fmzPq+7dJtUx0UFYu+UEoRznIxEOcpEb8Ssjb9yMeiJEzbtUVMCkhEtpztdKt75ngDRWg==
+  dependencies:
+    node-inspect-extracted "^2.0.0"
+
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/@tsconfig/node10/-/node10-1.0.9.tgz#df4907fc07a886922637b15e02d4cebc4c0021b2"
@@ -2414,6 +2426,11 @@ node-fetch@^2.6.1:
   integrity sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==
   dependencies:
     whatwg-url "^5.0.0"
+
+node-inspect-extracted@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/node-inspect-extracted/-/node-inspect-extracted-2.0.2.tgz#e5500e79f6bc03517175881c991f3bfaea67115a"
+  integrity sha512-8qm9+tu/GmbA/uWQRs6ad8KstyhH94a0pXpRVGHaJ9wHlJbetCYoCwXbKILaaMcE+wgbgpOpzcCnipkL8vTqxA==
 
 node-int64@^0.4.0:
   version "0.4.0"
