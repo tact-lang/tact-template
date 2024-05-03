@@ -21,7 +21,7 @@ contract SampleTactContract with Deployable {
         require(ctx.sender == self.owner, "Invalid sender");
         
         // Update counter
-        self.counter = (self.counter + v);
+        self.counter += v;
     }
 
     receive(msg: Add) {
@@ -37,3 +37,4 @@ contract SampleTactContract with Deployable {
         return self.counter;
     }
 }
+

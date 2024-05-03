@@ -7,13 +7,13 @@
     "read": "ts-node ./sources/contract.read.ts"
   },
   "dependencies": {
-    "@tact-lang/compiler": "^1.2.0",
+    "@tact-lang/compiler": "~1.3.0",
     "@tact-lang/coverage": "^0.0.8",
     "@tact-lang/deployer": "^0.2.0",
     "@tact-lang/emulator": "^4.2.3",
     "@tact-lang/ton-abi": "^0.0.3",
     "@tact-lang/ton-jest": "^0.0.4",
-    "@ton/core": "0.49.2",
+    "@ton/core": "~0.56.3",
     "@ton/crypto": "^3.2.0",
     "@ton/ton": "^13.9.0",
     "@types/jest": "^29.2.4",
