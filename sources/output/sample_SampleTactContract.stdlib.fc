@@ -54,7 +54,7 @@ forall X0, X1 -> (X0, X1) __tact_tuple_destroy_2(tuple v) asm "2 UNTUPLE";
     $b = store_int($b, 0, 3);
     $b = __tact_store_address($b, $params'to);
     $b = store_coins($b, $params'value);
-    $b = store_int($b, 0, ((((1 + 4) + 4) + 64) + 32));
+    $b = store_int($b, 0, 105);
     if (( ((~ null?($params'code))) ? (true) : ((~ null?($params'data))) )) {
         $b = __tact_store_bool($b, true);
         builder $bc = begin_cell();
@@ -99,17 +99,17 @@ forall X0, X1 -> (X0, X1) __tact_tuple_destroy_2(tuple v) asm "2 UNTUPLE";
         $code = $init2'code;
         $data = $init2'data;
     }
-    if ((0 > 0)) {
+    if (false) {
         var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
         int $balance = __tact_my_balance();
         int $balanceBeforeMessage = ($balance - $ctx'value);
         if (($balanceBeforeMessage < 0)) {
             raw_reserve(0, 0);
-            $global_send($SendParameters$_constructor_bounce_to_value_mode_body_code_data($bounce, $to, 0, (128 | 2), $body, $code, $data));
+            $global_send($SendParameters$_constructor_bounce_to_value_mode_body_code_data($bounce, $to, 0, 130, $body, $code, $data));
             return (($self'owner, $self'counter), ());
         }
     }
-    $global_send($SendParameters$_constructor_bounce_to_value_mode_body_code_data($bounce, $to, 0, (64 | 2), $body, $code, $data));
+    $global_send($SendParameters$_constructor_bounce_to_value_mode_body_code_data($bounce, $to, 0, 66, $body, $code, $data));
     return (($self'owner, $self'counter), ());
 }
 
