@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { Address, contractAddress } from "@ton/core";
-import { SampleTactContract } from "./output/sample_SampleTactContract";
+import { SampleTactContract } from "./output/sample_SampleTactContract"; // The modoles will show up in here after compiled the tact contract
 import { prepareTactDeployment } from "@tact-lang/deployer";
 
 (async () => {

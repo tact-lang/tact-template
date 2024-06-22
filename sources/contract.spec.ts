@@ -3,13 +3,22 @@ import { ContractSystem } from "@tact-lang/emulator";
 import { SampleTactContract } from "./output/sample_SampleTactContract";
 
 describe("contract", () => {
-    it("should deploy correctly", async () => {
+
+    let system: ContractSystem;
+    let owner: any;
+    let nonOwner: any;
+    
+    beforeAll(async () => {
         // Create ContractSystem and deploy contract
-        let system = await ContractSystem.create();
-        let owner = system.treasure("owner");
-        let nonOwner = system.treasure("non-owner");
-        let contract = system.open(await SampleTactContract.fromInit(owner.address));
+        system = await ContractSystem.create();
+        owner = system.treasure("owner");
+        nonOwner = system.treasure("non-owner");
+    });
+
+    it("should deploy correctly", async () => {
+        let contract = await system.open(await SampleTactContract.fromInit(owner.address));
         system.name(contract.address, "main");
+
         let track = system.track(contract);
         await contract.send(owner, { value: toNano(1) }, { $$type: "Deploy", queryId: 0n });
         await system.run();
