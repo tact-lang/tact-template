@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: SampleTactContract
-BOC Size: 849 bytes
+BOC Size: 701 bytes
 
 # Types
 Total Types: 7
@@ -64,3 +64,20 @@ Total Get Methods: 1
 136: Invalid address
 137: Masterchain support is not enabled for this contract
 4429: Invalid sender
+
+# Trait Inheritance Diagram
+
+```mermaid
+graph TD
+SampleTactContract
+SampleTactContract --> BaseTrait
+SampleTactContract --> Deployable
+Deployable --> BaseTrait
+```
+
+# Contract Dependency Diagram
+
+```mermaid
+graph TD
+SampleTactContract
+```

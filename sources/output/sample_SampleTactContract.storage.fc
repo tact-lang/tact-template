@@ -14,8 +14,8 @@
 ;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
 ;;
 
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline {
-    return (bounce, to, value, mode, body, code, data);
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline {
+    return ($bounce, $to, $value, $mode, $body, $code, $data);
 }
 
 ;;
@@ -47,8 +47,8 @@ cell $DeployOk$_store_cell((int) v) inline {
     return $DeployOk$_store(begin_cell(), v).end_cell();
 }
 
-((int)) $DeployOk$_constructor_queryId(int queryId) inline {
-    return (queryId);
+((int)) $DeployOk$_constructor_queryId(int $queryId) inline {
+    return ($queryId);
 }
 
 ;;
@@ -94,9 +94,9 @@ builder $SampleTactContract$_store(builder build_0, (slice, int) v) inline {
     } else {
         ;; Allow only workchain deployments
         throw_unless(137, my_address().preload_uint(11) == 1024);
-        (slice owner) = $sc~$SampleTactContract$init$_load();
+        (slice $owner) = $sc~$SampleTactContract$init$_load();
         $sc.end_parse();
-        return $SampleTactContract$_contract_init(owner);
+        return $SampleTactContract$_contract_init($owner);
     }
 }
 

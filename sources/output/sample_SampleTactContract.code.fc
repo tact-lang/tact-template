@@ -66,19 +66,6 @@ _ %counter() method_id(104984) {
     return res;
 }
 
-_ supported_interfaces() method_id {
-    return (
-        "org.ton.introspection.v0"H >> 128,
-        "org.ton.abi.ipfs.v0"H >> 128,
-        "org.ton.deploy.lazy.v0"H >> 128,
-        "org.ton.chain.workchain.v0"H >> 128
-    );
-}
-
-_ get_abi_ipfs() method_id {
-    return "ipfs://QmSXocNceQzp6C22zfcjvGc4Z8hdqHZj7xKhnwwvpHc9xR";
-}
-
 _ lazy_deployment_completed() method_id {
     return get_data().begin_parse().load_int(1);
 }
