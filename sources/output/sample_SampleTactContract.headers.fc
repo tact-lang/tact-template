@@ -4,7 +4,7 @@
 ;;
 
 ;; __tact_verify_address
-slice __tact_verify_address(slice address) inline;
+slice __tact_verify_address(slice address) impure inline;
 
 ;; __tact_load_address
 (slice, slice) __tact_load_address(slice cs) inline;
@@ -16,7 +16,7 @@ builder __tact_store_address(builder b, slice address) inline;
 int __tact_my_balance() inline;
 
 ;; __tact_not_null
-forall X -> X __tact_not_null(X x) inline;
+forall X -> X __tact_not_null(X x) impure inline;
 
 ;; __tact_context_get
 (int, slice, int, slice) __tact_context_get() inline;
@@ -73,7 +73,7 @@ builder $SampleTactContract$_store(builder build_0, (slice, int) v) inline;
 ((slice, int), int) $SampleTactContract$_fun_counter((slice, int) $self) impure inline_ref;
 
 ;; $SendParameters$_constructor_bounce_to_value_mode_body_code_data
-((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline;
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline;
 
 ;; $SampleTactContract$_fun_forward
 ((slice, int), ()) $SampleTactContract$_fun_forward((slice, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
@@ -85,4 +85,4 @@ builder $SampleTactContract$_store(builder build_0, (slice, int) v) inline;
 ((slice, int), ()) $SampleTactContract$_fun_notify((slice, int) $self, cell $body) impure inline;
 
 ;; $DeployOk$_constructor_queryId
-((int)) $DeployOk$_constructor_queryId(int queryId) inline;
+((int)) $DeployOk$_constructor_queryId(int $queryId) inline;

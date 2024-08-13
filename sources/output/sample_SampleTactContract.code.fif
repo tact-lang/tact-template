@@ -31,8 +31,6 @@ PROGRAM{
   DECLPROC $SampleTactContract$_internal_text_c4f8d72312edfdef5b7bec7833bdbb162d1511bd78a912aed0f2637af65572ae
   DECLPROC $SampleTactContract$_internal_binary_Deploy
   104984 DECLMETHOD %counter
-  113617 DECLMETHOD supported_interfaces
-  121275 DECLMETHOD get_abi_ipfs
   115390 DECLMETHOD lazy_deployment_completed
   DECLPROC $SampleTactContract$_contract_router_internal
   DECLPROC recv_internal
@@ -350,15 +348,6 @@ PROGRAM{
     $SampleTactContract$_contract_load INLINECALLDICT
     $SampleTactContract$_fun_counter INLINECALLDICT
     2 1 BLKDROP2
-  }>
-  supported_interfaces PROC:<{
-    123515602279859691144772641439386770278 PUSHINT
-    209801025412363888721030803524359905849 PUSHINT
-    42980537499636128163026532310500881091 PUSHINT
-    209474421377847335869795010607481022628 PUSHINT
-  }>
-  get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d53586f634e6365517a70364332327a66636a764763345a38686471485a6a37784b686e777776704863397852} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
