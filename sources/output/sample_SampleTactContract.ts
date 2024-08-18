@@ -409,6 +409,57 @@ function dictValueParserAdd(): DictionaryValue<Add> {
     }
 }
 
+export type SampleTactContract$Data = {
+    $$type: 'SampleTactContract$Data';
+    owner: Address;
+    counter: bigint;
+}
+
+export function storeSampleTactContract$Data(src: SampleTactContract$Data) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeAddress(src.owner);
+        b_0.storeUint(src.counter, 32);
+    };
+}
+
+export function loadSampleTactContract$Data(slice: Slice) {
+    let sc_0 = slice;
+    let _owner = sc_0.loadAddress();
+    let _counter = sc_0.loadUintBig(32);
+    return { $$type: 'SampleTactContract$Data' as const, owner: _owner, counter: _counter };
+}
+
+function loadTupleSampleTactContract$Data(source: TupleReader) {
+    let _owner = source.readAddress();
+    let _counter = source.readBigNumber();
+    return { $$type: 'SampleTactContract$Data' as const, owner: _owner, counter: _counter };
+}
+
+function loadGetterTupleSampleTactContract$Data(source: TupleReader) {
+    let _owner = source.readAddress();
+    let _counter = source.readBigNumber();
+    return { $$type: 'SampleTactContract$Data' as const, owner: _owner, counter: _counter };
+}
+
+function storeTupleSampleTactContract$Data(source: SampleTactContract$Data) {
+    let builder = new TupleBuilder();
+    builder.writeAddress(source.owner);
+    builder.writeNumber(source.counter);
+    return builder.build();
+}
+
+function dictValueParserSampleTactContract$Data(): DictionaryValue<SampleTactContract$Data> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeSampleTactContract$Data(src)).endCell());
+        },
+        parse: (src) => {
+            return loadSampleTactContract$Data(src.loadRef().beginParse());
+        }
+    }
+}
+
  type SampleTactContract_init_args = {
     $$type: 'SampleTactContract_init_args';
     owner: Address;
@@ -468,6 +519,7 @@ const SampleTactContract_types: ABIType[] = [
     {"name":"DeployOk","header":2952335191,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"FactoryDeploy","header":1829761339,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"cashback","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"Add","header":2278832834,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":32}}]},
+    {"name":"SampleTactContract$Data","header":null,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}},{"name":"counter","type":{"kind":"simple","type":"uint","optional":false,"format":32}}]},
 ]
 
 const SampleTactContract_getters: ABIGetter[] = [
