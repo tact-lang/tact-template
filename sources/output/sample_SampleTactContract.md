@@ -3,7 +3,7 @@ Contract: SampleTactContract
 BOC Size: 701 bytes
 
 # Types
-Total Types: 7
+Total Types: 8
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -32,6 +32,10 @@ Signature: `FactoryDeploy{queryId:uint64,cashback:address}`
 ## Add
 TLB: `add#87d43ac2 amount:uint32 = Add`
 Signature: `Add{amount:uint32}`
+
+## SampleTactContract$Data
+TLB: `null`
+Signature: `null`
 
 # Get Methods
 Total Get Methods: 1

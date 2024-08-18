@@ -644,10 +644,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@tact-lang/compiler@~1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.4.2.tgz#3d7d489afa979a3b0f7f672d09dab8aeab8231b9"
-  integrity sha512-vgXHCClLhedZ3BlrzEkX70QUWWcBjNyW3YBgfvOm0oj6g3WNrFv6W2z0hca/ZlCdwUqUwKz4lHuPCJdl201fgA==
+"@tact-lang/compiler@~1.4.4":
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.4.4.tgz#05de108884dc156023f513df82149ecc91b5b4e6"
+  integrity sha512-hpVgH+9wUEmzBiPg3G2S4nt0sDL/iUSKHPoGz45ecDPVCjfqa6RjWhn24HmJ67kBFLZpahA+DaUFCy2UxIZ45A==
   dependencies:
     "@tact-lang/opcode" "^0.0.16"
     "@ton/core" "0.56.3"
