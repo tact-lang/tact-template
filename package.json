@@ -15,7 +15,7 @@
     "@tact-lang/ton-jest": "^0.0.4",
     "@ton/core": "~0.56.3",
     "@ton/crypto": "^3.2.0",
-    "@ton/ton": "^13.9.0",
+    "@ton/ton": "^13.11.1",
     "@types/jest": "^29.2.4",
     "@types/node": "^18.11.14",
     "@types/qs": "^6.9.7",
