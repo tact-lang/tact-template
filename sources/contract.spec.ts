@@ -1,168 +1,41 @@
 import { toNano } from "@ton/core";
-import { ContractSystem } from "@tact-lang/emulator";
+import { Blockchain } from "@ton/sandbox";
+import "@ton/test-utils";
 import { SampleTactContract } from "./output/sample_SampleTactContract";
+import { findErrorCodeByMessage } from './utils/error';
 
 describe("contract", () => {
     it("should deploy correctly", async () => {
-        // Create ContractSystem and deploy contract
-        let system = await ContractSystem.create();
-        let owner = system.treasure("owner");
-        let nonOwner = system.treasure("non-owner");
-        let contract = system.open(await SampleTactContract.fromInit(owner.address));
-        system.name(contract.address, "main");
-        let track = system.track(contract);
-        await contract.send(owner, { value: toNano(1) }, { $$type: "Deploy", queryId: 0n });
-        await system.run();
-        expect(track.collect()).toMatchInlineSnapshot(`
-            [
-              {
-                "$seq": 0,
-                "events": [
-                  {
-                    "$type": "deploy",
-                  },
-                  {
-                    "$type": "received",
-                    "message": {
-                      "body": {
-                        "type": "known",
-                        "value": {
-                          "$$type": "Deploy",
-                          "queryId": 0n,
-                        },
-                      },
-                      "bounce": true,
-                      "from": "@treasure(owner)",
-                      "to": "@main",
-                      "type": "internal",
-                      "value": "1",
-                    },
-                  },
-                  {
-                    "$type": "processed",
-                    "gasUsed": 8040n,
-                  },
-                  {
-                    "$type": "sent",
-                    "messages": [
-                      {
-                        "body": {
-                          "type": "known",
-                          "value": {
-                            "$$type": "DeployOk",
-                            "queryId": 0n,
-                          },
-                        },
-                        "bounce": false,
-                        "from": "@main",
-                        "to": "@treasure(owner)",
-                        "type": "internal",
-                        "value": "0.990764",
-                      },
-                    ],
-                  },
-                ],
-              },
-            ]
-        `);
+        // Create Sandbox and deploy contract
+        let system = await Blockchain.create();
+        let owner = await system.treasury("owner");
+        let nonOwner = await system.treasury("non-owner");
+        let contract = system.openContract(await SampleTactContract.fromInit(owner.address));
+        const deployResult = await contract.send(owner.getSender(), { value: toNano(1) }, { $$type: "Deploy", queryId: 0n });
+        expect(deployResult.transactions).toHaveTransaction({
+            from: owner.address,
+            to: contract.address,
+            deploy: true,
+            success: true,
+        });
 
         // Check counter
         expect(await contract.getCounter()).toEqual(0n);
 
         // Increment counter
-        await contract.send(owner, { value: toNano(1) }, "increment");
-        await system.run();
-        expect(track.collect()).toMatchInlineSnapshot(`
-            [
-              {
-                "$seq": 1,
-                "events": [
-                  {
-                    "$type": "received",
-                    "message": {
-                      "body": {
-                        "text": "increment",
-                        "type": "text",
-                      },
-                      "bounce": true,
-                      "from": "@treasure(owner)",
-                      "to": "@main",
-                      "type": "internal",
-                      "value": "1",
-                    },
-                  },
-                  {
-                    "$type": "processed",
-                    "gasUsed": 8176n,
-                  },
-                  {
-                    "$type": "sent",
-                    "messages": [
-                      {
-                        "body": {
-                          "text": "incremented",
-                          "type": "text",
-                        },
-                        "bounce": true,
-                        "from": "@main",
-                        "to": "@treasure(owner)",
-                        "type": "internal",
-                        "value": "0.990604",
-                      },
-                    ],
-                  },
-                ],
-              },
-            ]
-        `);
+        await contract.send(owner.getSender(), { value: toNano(1) }, "increment");
 
         // Check counter
         expect(await contract.getCounter()).toEqual(1n);
 
         // Non-owner
-        await contract.send(nonOwner, { value: toNano(1) }, "increment");
-        await system.run();
-        expect(track.collect()).toMatchInlineSnapshot(`
-            [
-              {
-                "$seq": 2,
-                "events": [
-                  {
-                    "$type": "received",
-                    "message": {
-                      "body": {
-                        "text": "increment",
-                        "type": "text",
-                      },
-                      "bounce": true,
-                      "from": "@treasure(non-owner)",
-                      "to": "@main",
-                      "type": "internal",
-                      "value": "1",
-                    },
-                  },
-                  {
-                    "$type": "failed",
-                    "errorCode": 4429,
-                    "errorMessage": "Invalid sender",
-                  },
-                  {
-                    "$type": "sent-bounced",
-                    "message": {
-                      "body": {
-                        "cell": "x{FFFFFFFF00000000696E6372656D656E74}",
-                        "type": "cell",
-                      },
-                      "bounce": false,
-                      "from": "@main",
-                      "to": "@treasure(non-owner)",
-                      "type": "internal",
-                      "value": "0.995112",
-                    },
-                  },
-                ],
-              },
-            ]
-        `);
+        const nonOwnerResult = await contract.send(nonOwner.getSender(), { value: toNano(1) }, "increment");
+        const errorCodeForInvalidSender = findErrorCodeByMessage(contract.abi.errors, "Invalid sender");
+        expect(nonOwnerResult.transactions).toHaveTransaction({
+            from: nonOwner.address,
+            to: contract.address,
+            success: false,
+            exitCode: errorCodeForInvalidSender!!
+        });
     });
 });
