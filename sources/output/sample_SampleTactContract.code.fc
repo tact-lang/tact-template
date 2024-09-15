@@ -28,7 +28,8 @@
 
 ((slice, int), int) $SampleTactContract$_fun_counter((slice, int) $self) impure inline_ref {
     var (($self'owner, $self'counter)) = $self;
-    return (($self'owner, $self'counter), $self'counter);
+    var $fresh$ret_0 = $self'counter;
+    return (($self'owner, $self'counter), $fresh$ret_0);
 }
 
 ;;

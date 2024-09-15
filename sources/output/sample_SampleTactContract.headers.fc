@@ -12,9 +12,6 @@ slice __tact_verify_address(slice address) impure inline;
 ;; __tact_store_address
 builder __tact_store_address(builder b, slice address) inline;
 
-;; __tact_my_balance
-int __tact_my_balance() inline;
-
 ;; __tact_not_null
 forall X -> X __tact_not_null(X x) impure inline;
 
@@ -64,7 +61,7 @@ builder $SampleTactContract$_store(builder build_0, (slice, int) v) inline;
 () $SampleTactContract$_contract_store((slice, int) v) impure inline;
 
 ;; $global_send
-() $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref;
+int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref;
 
 ;; $SampleTactContract$_fun_add
 ((slice, int), ()) $SampleTactContract$_fun_add((slice, int) $self, int $v) impure inline_ref;
