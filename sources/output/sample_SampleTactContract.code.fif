@@ -2,7 +2,6 @@ PROGRAM{
   DECLPROC __tact_verify_address
   DECLPROC __tact_load_address
   DECLPROC __tact_store_address
-  DECLPROC __tact_my_balance
   DECLPROC __tact_not_null
   DECLPROC __tact_context_get
   DECLPROC __tact_context_get_sender
@@ -62,10 +61,6 @@ PROGRAM{
   __tact_store_address PROCINLINE:<{
     __tact_verify_address INLINECALLDICT
     STSLICER
-  }>
-  __tact_my_balance PROCINLINE:<{
-    BALANCE
-    FIRST
   }>
   __tact_not_null PROCINLINE:<{
     DUP
@@ -187,7 +182,7 @@ PROGRAM{
     s0 s5 XCHG2
     __tact_store_address INLINECALLDICT
     s0 s3 XCHG2
-    STGRAMS
+    STVARUINT16
     0 PUSHINT
     SWAP
     105 STI
@@ -274,7 +269,7 @@ PROGRAM{
     }>
     ENDC
     SWAP
-    SENDRAWMSG
+    SENDMSG
   }>
   $SampleTactContract$_fun_add PROCREF:<{
     __tact_context_get INLINECALLDICT
@@ -313,6 +308,7 @@ PROGRAM{
     s2 s3 XCHG2
     $SendParameters$_constructor_bounce_to_value_mode_body_code_data INLINECALLDICT
     $global_send INLINECALLDICT
+    DROP
   }>
   $SampleTactContract$_fun_reply PROCINLINE:<{
     __tact_context_get_sender INLINECALLDICT

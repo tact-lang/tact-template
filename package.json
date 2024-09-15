@@ -7,8 +7,7 @@
     "read": "ts-node ./sources/contract.read.ts"
   },
   "dependencies": {
-    "@tact-lang/compiler": "~1.4.4",
-    "@tact-lang/coverage": "^0.0.8",
+    "@tact-lang/compiler": "~1.5.0",
     "@tact-lang/deployer": "^0.2.0",
     "@tact-lang/ton-abi": "^0.0.3",
     "@tact-lang/ton-jest": "^0.0.4",

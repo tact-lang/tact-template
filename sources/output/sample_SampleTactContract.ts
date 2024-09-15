@@ -71,6 +71,108 @@ function dictValueParserStateInit(): DictionaryValue<StateInit> {
     }
 }
 
+export type StdAddress = {
+    $$type: 'StdAddress';
+    workchain: bigint;
+    address: bigint;
+}
+
+export function storeStdAddress(src: StdAddress) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeInt(src.workchain, 8);
+        b_0.storeUint(src.address, 256);
+    };
+}
+
+export function loadStdAddress(slice: Slice) {
+    let sc_0 = slice;
+    let _workchain = sc_0.loadIntBig(8);
+    let _address = sc_0.loadUintBig(256);
+    return { $$type: 'StdAddress' as const, workchain: _workchain, address: _address };
+}
+
+function loadTupleStdAddress(source: TupleReader) {
+    let _workchain = source.readBigNumber();
+    let _address = source.readBigNumber();
+    return { $$type: 'StdAddress' as const, workchain: _workchain, address: _address };
+}
+
+function loadGetterTupleStdAddress(source: TupleReader) {
+    let _workchain = source.readBigNumber();
+    let _address = source.readBigNumber();
+    return { $$type: 'StdAddress' as const, workchain: _workchain, address: _address };
+}
+
+function storeTupleStdAddress(source: StdAddress) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.workchain);
+    builder.writeNumber(source.address);
+    return builder.build();
+}
+
+function dictValueParserStdAddress(): DictionaryValue<StdAddress> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeStdAddress(src)).endCell());
+        },
+        parse: (src) => {
+            return loadStdAddress(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type VarAddress = {
+    $$type: 'VarAddress';
+    workchain: bigint;
+    address: Slice;
+}
+
+export function storeVarAddress(src: VarAddress) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeInt(src.workchain, 32);
+        b_0.storeRef(src.address.asCell());
+    };
+}
+
+export function loadVarAddress(slice: Slice) {
+    let sc_0 = slice;
+    let _workchain = sc_0.loadIntBig(32);
+    let _address = sc_0.loadRef().asSlice();
+    return { $$type: 'VarAddress' as const, workchain: _workchain, address: _address };
+}
+
+function loadTupleVarAddress(source: TupleReader) {
+    let _workchain = source.readBigNumber();
+    let _address = source.readCell().asSlice();
+    return { $$type: 'VarAddress' as const, workchain: _workchain, address: _address };
+}
+
+function loadGetterTupleVarAddress(source: TupleReader) {
+    let _workchain = source.readBigNumber();
+    let _address = source.readCell().asSlice();
+    return { $$type: 'VarAddress' as const, workchain: _workchain, address: _address };
+}
+
+function storeTupleVarAddress(source: VarAddress) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.workchain);
+    builder.writeSlice(source.address.asCell());
+    return builder.build();
+}
+
+function dictValueParserVarAddress(): DictionaryValue<VarAddress> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeVarAddress(src)).endCell());
+        },
+        parse: (src) => {
+            return loadVarAddress(src.loadRef().beginParse());
+        }
+    }
+}
+
 export type Context = {
     $$type: 'Context';
     bounced: boolean;
@@ -473,8 +575,8 @@ function initSampleTactContract_init_args(src: SampleTactContract_init_args) {
 }
 
 async function SampleTactContract_init(owner: Address) {
-    const __code = Cell.fromBase64('te6ccgECEAEAArEAART/APSkE/S88sgLAQIBYgIDAtTQAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxa2zzy4ILI+EMBzH8BygBZWSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFssfye1UDQQCAVgLDAPg7aLt+wGSMH/gcCHXScIflTAg1wsf3iCCEIfUOsK6jpUw0x8BghCH1DrCuvLggdMfATHbPH/gIIIQlGqYtrqOqDDTHwGCEJRqmLa68uCB0z8BMcgBghCv+Q9XWMsfyz/J+EIBcG3bPH/gwACRMOMNcAYIBQNs+QGC8MT41yMS7f3vW3vseDO9uxYtFRG9eKkSrtDyY3r2VXKuuo+Ocds8iPhCAX9t2zx/2zHgBgcIACT4QW8kECNfAyOBEU0CxwXy9KAAHgAAAABpbmNyZW1lbnRlZAE6bW0ibrOZWyBu8tCAbyIBkTLiECRwAwSAQlAj2zwJAcrIcQHKAVAHAcoAcAHKAlAFINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAP6AnABymgjbrORf5MkbrPilzMzAXABygDjDSFus5x/AcoAASBu8tCAAcyVMXABygDiyQH7AAoAmH8BygDIcAHKAHABygAkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDiJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4nABygACfwHKAALJWMwCEbmhjbPNs8bCGA0OABG4K+7UTQ0gABgBwO1E0NQB+GPSAAGOJfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0x9ZbBLg+CjXCwqDCbry4In6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdHbPA8AAiAAAnA=');
-    const __system = Cell.fromBase64('te6cckECEgEAArsAAQHAAQEFoebTAgEU/wD0pBP0vPLICwMCAWIEDALU0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8Wts88uCCyPhDAcx/AcoAWVkg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbLH8ntVA4FA+Dtou37AZIwf+BwIddJwh+VMCDXCx/eIIIQh9Q6wrqOlTDTHwGCEIfUOsK68uCB0x8BMds8f+AgghCUapi2uo6oMNMfAYIQlGqYtrry4IHTPwExyAGCEK/5D1dYyx/LP8n4QgFwbds8f+DAAJEw4w1wBwkGA2z5AYLwxPjXIxLt/e9be+x4M727Fi0VEb14qRKu0PJjevZVcq66j45x2zyI+EIBf23bPH/bMeAHCAkAJPhBbyQQI18DI4ERTQLHBfL0oAAeAAAAAGluY3JlbWVudGVkATptbSJus5lbIG7y0IBvIgGRMuIQJHADBIBCUCPbPAoByshxAcoBUAcBygBwAcoCUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQA/oCcAHKaCNus5F/kyRus+KXMzMBcAHKAOMNIW6znH8BygABIG7y0IABzJUxcAHKAOLJAfsACwCYfwHKAMhwAcoAcAHKACRus51/AcoABCBu8tCAUATMljQDcAHKAOIkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDicAHKAAJ/AcoAAslYzAIBWA0RAhG5oY2zzbPGwhgOEAHA7UTQ1AH4Y9IAAY4l+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHTH1lsEuD4KNcLCoMJuvLgifpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0ds8DwACcAACIAARuCvu1E0NIAAYJ1QBQQ==');
+    const __code = Cell.fromBase64('te6ccgECEAEAArIAART/APSkE/S88sgLAQIBYgIDAtTQAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxa2zzy4ILI+EMBzH8BygBZWSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFssfye1UDQQCAVgLDAPg7aLt+wGSMH/gcCHXScIflTAg1wsf3iCCEIfUOsK6jpUw0x8BghCH1DrCuvLggdMfATHbPH/gIIIQlGqYtrqOqDDTHwGCEJRqmLa68uCB0z8BMcgBghCv+Q9XWMsfyz/J+EIBcG3bPH/gwACRMOMNcAYIBQNs+QGC8MT41yMS7f3vW3vseDO9uxYtFRG9eKkSrtDyY3r2VXKuuo+Ocds8iPhCAX9t2zx/2zHgBgcIACT4QW8kECNfAyOBEU0CxwXy9KAAHgAAAABpbmNyZW1lbnRlZAE8bW0ibrOZWyBu8tCAbyIBkTLiECRwAwSAQlAj2zwwCQHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wgKAJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMAhG5oY2zzbPGwhgNDgARuCvu1E0NIAAYAcDtRNDUAfhj0gABjiX6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdMfWWwS4Pgo1wsKgwm68uCJ+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHR2zwPAAIgAAJw');
+    const __system = Cell.fromBase64('te6cckECEgEAArwAAQHAAQEFoebTAgEU/wD0pBP0vPLICwMCAWIEDALU0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8Wts88uCCyPhDAcx/AcoAWVkg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxbLH8ntVA4FA+Dtou37AZIwf+BwIddJwh+VMCDXCx/eIIIQh9Q6wrqOlTDTHwGCEIfUOsK68uCB0x8BMds8f+AgghCUapi2uo6oMNMfAYIQlGqYtrry4IHTPwExyAGCEK/5D1dYyx/LP8n4QgFwbds8f+DAAJEw4w1wBwkGA2z5AYLwxPjXIxLt/e9be+x4M727Fi0VEb14qRKu0PJjevZVcq66j45x2zyI+EIBf23bPH/bMeAHCAkAJPhBbyQQI18DI4ERTQLHBfL0oAAeAAAAAGluY3JlbWVudGVkATxtbSJus5lbIG7y0IBvIgGRMuIQJHADBIBCUCPbPDAKAcrIcQHKAVAHAcoAcAHKAlAFINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAP6AnABymgjbrORf5MkbrPilzMzAXABygDjDSFus5x/AcoAASBu8tCAAcyVMXABygDiyQH7CAsAmH8BygDIcAHKAHABygAkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDiJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4nABygACfwHKAALJWMwCAVgNEQIRuaGNs82zxsIYDhABwO1E0NQB+GPSAAGOJfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0x9ZbBLg+CjXCwqDCbry4In6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAdHbPA8AAnAAAiAAEbgr7tRNDSAAGLwv97A=');
     let builder = beginCell();
     builder.storeRef(__system);
     builder.storeUint(0, 1);
@@ -493,11 +595,23 @@ const SampleTactContract_errors: { [key: number]: { message: string } } = {
     8: { message: `Cell overflow` },
     9: { message: `Cell underflow` },
     10: { message: `Dictionary error` },
+    11: { message: `'Unknown' error` },
+    12: { message: `Fatal error` },
     13: { message: `Out of gas error` },
-    32: { message: `Method ID not found` },
+    14: { message: `Virtualization error` },
+    32: { message: `Action list is invalid` },
+    33: { message: `Action list is too long` },
     34: { message: `Action is invalid or not supported` },
+    35: { message: `Invalid source address in outbound message` },
+    36: { message: `Invalid destination address in outbound message` },
     37: { message: `Not enough TON` },
     38: { message: `Not enough extra-currencies` },
+    39: { message: `Outbound message does not fit into a cell after rewriting` },
+    40: { message: `Cannot process a message` },
+    41: { message: `Library reference is null` },
+    42: { message: `Library change action error` },
+    43: { message: `Exceeded maximum number of cells in the library or the maximum depth of the Merkle tree` },
+    50: { message: `Account state size exceeded limits` },
     128: { message: `Null reference exception` },
     129: { message: `Invalid serialization prefix` },
     130: { message: `Invalid incoming message` },
@@ -513,6 +627,8 @@ const SampleTactContract_errors: { [key: number]: { message: string } } = {
 
 const SampleTactContract_types: ABIType[] = [
     {"name":"StateInit","header":null,"fields":[{"name":"code","type":{"kind":"simple","type":"cell","optional":false}},{"name":"data","type":{"kind":"simple","type":"cell","optional":false}}]},
+    {"name":"StdAddress","header":null,"fields":[{"name":"workchain","type":{"kind":"simple","type":"int","optional":false,"format":8}},{"name":"address","type":{"kind":"simple","type":"uint","optional":false,"format":256}}]},
+    {"name":"VarAddress","header":null,"fields":[{"name":"workchain","type":{"kind":"simple","type":"int","optional":false,"format":32}},{"name":"address","type":{"kind":"simple","type":"slice","optional":false}}]},
     {"name":"Context","header":null,"fields":[{"name":"bounced","type":{"kind":"simple","type":"bool","optional":false}},{"name":"sender","type":{"kind":"simple","type":"address","optional":false}},{"name":"value","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"raw","type":{"kind":"simple","type":"slice","optional":false}}]},
     {"name":"SendParameters","header":null,"fields":[{"name":"bounce","type":{"kind":"simple","type":"bool","optional":false}},{"name":"to","type":{"kind":"simple","type":"address","optional":false}},{"name":"value","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"mode","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"body","type":{"kind":"simple","type":"cell","optional":true}},{"name":"code","type":{"kind":"simple","type":"cell","optional":true}},{"name":"data","type":{"kind":"simple","type":"cell","optional":true}}]},
     {"name":"Deploy","header":2490013878,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
