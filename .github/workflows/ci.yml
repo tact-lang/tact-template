@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [22]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run Misti
+        run: yarn misti -m medium tact.config.json
+
+      - name: Build
+        run: yarn install
+
+      - name: Run tests
+        run: yarn test
