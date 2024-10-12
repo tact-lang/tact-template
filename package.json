@@ -2,11 +2,13 @@
   "private": true,
   "scripts": {
     "build": "tact --config ./tact.config.json",
+    "lint": "yarn misti ./tact.config.json",
     "test": "jest",
     "deploy": "ts-node ./sources/contract.deploy.ts",
     "read": "ts-node ./sources/contract.read.ts"
   },
   "dependencies": {
+    "@nowarp/misti": "~0.4.2",
     "@tact-lang/compiler": "~1.5.0",
     "@tact-lang/deployer": "^0.2.0",
     "@tact-lang/ton-abi": "^0.0.3",

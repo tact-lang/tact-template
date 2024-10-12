@@ -5,6 +5,7 @@ This template comes pre-configured to kickstart your new Tact project. It includ
 ```shell
 yarn test # To test contract
 yarn build # To build contract
+yarn lint # To find code issues in contract
 yarn deploy # To deploy contract
 ```
 
