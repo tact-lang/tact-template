@@ -572,19 +572,21 @@
     multiformats "^9.5.4"
     murmurhash3js-revisited "^3.0.0"
 
-"@nowarp/misti@~0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@nowarp/misti/-/misti-0.4.2.tgz#67985310c0a21863a6e61477666e4fef7a955a8e"
-  integrity sha512-YnNSgNdpDYvQSHeeW+p7kyy033q2vPzCqhm5iV5ifrQPu4G5gplSm/2yksOlECyABlvkknm3dLMa9he/pZEC7w==
+"@nowarp/misti@~0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@nowarp/misti/-/misti-0.5.0.tgz#e25e882fba99fa6c37abd4557a7bdbcc3a7cd05a"
+  integrity sha512-gx1IO8+8YQEsU2M8TWJfQ24K55aIpCUkMzXNJuEe2fL/fECp76+4nx/2wAG8XjL2WNIB1CuL9vLcNWy2dzafIg==
   dependencies:
     "@nowarp/souffle" "^0.1.2"
     "@tact-lang/compiler" "~1.5.1"
+    "@ton/core" "~0.59.0"
     "@types/benchmark" "^2.1.5"
     "@types/fs-extra" "^11.0.4"
     "@types/json-bigint" "^1.0.4"
     benchmark "^2.1.4"
     commander "^12.0.0"
     fs-extra "^11.2.0"
+    ignore "^6.0.2"
     json-bigint "^1.0.0"
     ohm-js "^17.1.0"
     zod "^3.22.4"
@@ -748,6 +750,13 @@
   version "0.56.3"
   resolved "https://registry.yarnpkg.com/@ton/core/-/core-0.56.3.tgz#1162764573abb76032eba70f8497e5cb2ea532ee"
   integrity sha512-HVkalfqw8zqLLPehtq0CNhu5KjVzc7IrbDwDHPjGoOSXmnqSobiWj8a5F+YuWnZnEbQKtrnMGNOOjVw4LG37rg==
+  dependencies:
+    symbol.inspect "1.0.1"
+
+"@ton/core@~0.59.0":
+  version "0.59.0"
+  resolved "https://registry.yarnpkg.com/@ton/core/-/core-0.59.0.tgz#58da9fcaa58e5a0c705b63baf1e86cab6e196689"
+  integrity sha512-LSIkGst7BoY7fMWshejzcH0UJnoW21JGlRrW0ch+6A7Xb/7EuekxgdKym7fHxcry6OIf6FoeFg97lJ960N/Ghg==
   dependencies:
     symbol.inspect "1.0.1"
 
@@ -1738,6 +1747,11 @@ ieee754@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
+
+ignore@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/ignore/-/ignore-6.0.2.tgz#77cccb72a55796af1b6d2f9eb14fa326d24f4283"
+  integrity sha512-InwqeHHN2XpumIkMvpl/DCJVrAHgCsG5+cn1XlnLWGwtZBm8QJfSusItfrwx81CTp5agNZqpKU2J/ccC5nGT4A==
 
 import-local@^3.0.2:
   version "3.1.0"
