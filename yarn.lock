@@ -668,13 +668,13 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@tact-lang/compiler@~1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.5.0.tgz#1a3c3c9faf32c41fbab269db9fe2af24b7f9c360"
-  integrity sha512-VN/E81VDwwyoE6H8NrX2Sfp63Y3N0Jdk349tg48YjdoTmyDEpiEbpHajfRoy04ZoxLKwbOD6213qflyv9g52Mw==
+"@tact-lang/compiler@~1.5.1":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.5.2.tgz#eece10634091eb31fa2f1b5453ede867cf68af9e"
+  integrity sha512-i6FONPYpM4hYujmrhtyXtcNA7UkDOcgWbHUCFvHT4+RFwPFHlwbq7gdDWDP4dgW6uMLoNt+JUL/o62Ho+rJn0Q==
   dependencies:
     "@tact-lang/opcode" "^0.0.16"
-    "@ton/core" "0.57.0"
+    "@ton/core" "0.58.1"
     "@ton/crypto" "^3.2.0"
     blockstore-core "1.0.5"
     change-case "^4.1.2"
@@ -688,10 +688,10 @@
     prando "^6.0.1"
     zod "^3.22.4"
 
-"@tact-lang/compiler@~1.5.1":
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.5.2.tgz#eece10634091eb31fa2f1b5453ede867cf68af9e"
-  integrity sha512-i6FONPYpM4hYujmrhtyXtcNA7UkDOcgWbHUCFvHT4+RFwPFHlwbq7gdDWDP4dgW6uMLoNt+JUL/o62Ho+rJn0Q==
+"@tact-lang/compiler@~1.5.3":
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.5.3.tgz#cbf1bb35e6b9303f541dfbab444303b91775e1b2"
+  integrity sha512-BxSCWfIQJUa0RC2ZltYfgTeN+3dRjMs4Hdxq61REfghpRiSU0IKdkLPGqJH/5zimzFFhjD4mhR0aFS71zUH9hA==
   dependencies:
     "@tact-lang/opcode" "^0.0.16"
     "@ton/core" "0.58.1"
@@ -731,13 +731,6 @@
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@tact-lang/ton-jest/-/ton-jest-0.0.4.tgz#c87604669ed0c6b4ba1a2e6f06616e267f7fc8ca"
   integrity sha512-FWjfiNvhMlE44ZLLL7tgmHbrszMTPMttmYiaTekf1vwFXV3uAOawM8xM9NldYaCVs9eh8840PjgISdMMUTCSCw==
-
-"@ton/core@0.57.0":
-  version "0.57.0"
-  resolved "https://registry.yarnpkg.com/@ton/core/-/core-0.57.0.tgz#fdf2d32848a3d1135b890e9a5bd8295e958a4a81"
-  integrity sha512-UOehEXEV5yqi+17qmmWdD01YfVgQlYtitSm5OfN/WMg6PAMkt+Uf91JRC4mdPNtkKDhyKuujJuhYs6QiOsHPfw==
-  dependencies:
-    symbol.inspect "1.0.1"
 
 "@ton/core@0.58.1":
   version "0.58.1"
