@@ -126,7 +126,7 @@ PROGRAM{
     DUP
     ISNULL
     128 THROWIF
-    2 UNTUPLE
+        2 UNTUPLE
   }>
   $SampleTactContract$init$_load PROCINLINE:<{
     __tact_load_address INLINECALLDICT
@@ -170,7 +170,7 @@ PROGRAM{
     c4 POP
   }>
   $global_send PROCREF:<{
-    NEWC
+        NEWC
     1 PUSHINT
     SWAP
     2 STI
@@ -182,7 +182,7 @@ PROGRAM{
     s0 s5 XCHG2
     __tact_store_address INLINECALLDICT
     s0 s3 XCHG2
-    STVARUINT16
+        STVARUINT16
     0 PUSHINT
     SWAP
     105 STI
@@ -199,7 +199,7 @@ PROGRAM{
     IF:<{
       TRUE
       __tact_store_bool INLINECALLDICT
-      NEWC
+          NEWC
       FALSE
       __tact_store_bool INLINECALLDICT
       FALSE
@@ -213,7 +213,7 @@ PROGRAM{
         s0 s4 XCHG
         __tact_not_null INLINECALLDICT
         s0 s4 XCHG2
-        STREF
+            STREF
       }>ELSE<{
         s4 POP
         s0 s3 XCHG
@@ -229,7 +229,7 @@ PROGRAM{
         s0 s4 XCHG
         __tact_not_null INLINECALLDICT
         s0 s4 XCHG2
-        STREF
+            STREF
       }>ELSE<{
         s4 POP
         s0 s3 XCHG
@@ -242,9 +242,9 @@ PROGRAM{
       TRUE
       __tact_store_bool INLINECALLDICT
       s0 s2 XCHG
-      ENDC
+          ENDC
       ROT
-      STREF
+          STREF
     }>ELSE<{
       s3 POP
       s3 POP
@@ -261,15 +261,15 @@ PROGRAM{
       SWAP
       __tact_not_null INLINECALLDICT
       SWAP
-      STREF
+          STREF
     }>ELSE<{
       NIP
       FALSE
       __tact_store_bool INLINECALLDICT
     }>
-    ENDC
+        ENDC
     SWAP
-    SENDMSG
+        SENDMSG
   }>
   $SampleTactContract$_fun_add PROCREF:<{
     __tact_context_get INLINECALLDICT
@@ -332,7 +332,7 @@ PROGRAM{
   $SampleTactContract$_internal_text_c4f8d72312edfdef5b7bec7833bdbb162d1511bd78a912aed0f2637af65572ae PROCINLINE:<{
     1 PUSHINT
     $SampleTactContract$_fun_add INLINECALLDICT
-    B{b5ee9c7241010101001100001e00000000696e6372656d656e7465648430bf20} B>boc PUSHREF
+        B{b5ee9c7241010101001100001e00000000696e6372656d656e7465648430bf20} B>boc PUSHREF
     $SampleTactContract$_fun_reply INLINECALLDICT
   }>
   $SampleTactContract$_internal_binary_Deploy PROCINLINE:<{

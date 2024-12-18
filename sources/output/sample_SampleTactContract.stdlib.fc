@@ -40,21 +40,37 @@ int __tact_slice_eq_bits(slice a, slice b) inline {
     return equal_slices_bits(a, b);
 }
 
-forall X0, X1 -> (X0, X1) __tact_tuple_destroy_2(tuple v) asm """2 UNTUPLE""";
+forall X0, X1 -> (X0, X1) __tact_tuple_destroy_2(tuple v) asm """
+    2 UNTUPLE
+""";
 
-builder $global_beginCell() impure asm """NEWC""";
+builder $global_beginCell() impure asm """
+    NEWC
+""";
 
-int $global_myBalance() impure asm """BALANCE FIRST""";
+int $global_myBalance() impure asm """
+    BALANCE FIRST
+""";
 
-() $global_nativeReserve(int $amount, int $mode) impure asm """RAWRESERVE""";
+() $global_nativeReserve(int $amount, int $mode) impure asm """
+    RAWRESERVE
+""";
 
-int $global_nativeSendMessageReturnForwardFee(cell $msg, int $mode) impure asm """SENDMSG""";
+int $global_nativeSendMessageReturnForwardFee(cell $msg, int $mode) impure asm """
+    SENDMSG
+""";
 
-builder $Builder$_fun_storeCoins(builder $self, int $value) impure asm """STVARUINT16""";
+builder $Builder$_fun_storeCoins(builder $self, int $value) impure asm """
+    STVARUINT16
+""";
 
-builder $Builder$_fun_storeRef(builder $self, cell $cell) impure asm($cell $self) """STREF""";
+builder $Builder$_fun_storeRef(builder $self, cell $cell) impure asm($cell $self) """
+    STREF
+""";
 
-cell $Builder$_fun_endCell(builder $self) impure asm """ENDC""";
+cell $Builder$_fun_endCell(builder $self) impure asm """
+    ENDC
+""";
 
 int $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref {
     var (($params'bounce, $params'to, $params'value, $params'mode, $params'body, $params'code, $params'data)) = $params;
