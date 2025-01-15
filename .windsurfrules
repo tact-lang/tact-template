@@ -106,16 +106,10 @@ contract SampleTactContract with Deployable {
    yarn install
    ```
 
-   or
-
-   ```bash
-   npm install
-   ```
-
 2. **Build the contract**:
 
    ```bash
-   npm run build
+   yarn build
    ```
 
    After building, the compiled files will appear in the `output` folder.
@@ -123,7 +117,7 @@ contract SampleTactContract with Deployable {
 3. **Deploy the contract** (using the example script `contract.deploy.ts`):
 
    ```bash
-   npm start
+   yarn deploy
    ```
 
    The script will load the necessary data, prepare and upload the contract package to TON (testnet or mainnet).
@@ -131,23 +125,53 @@ contract SampleTactContract with Deployable {
 4. **Run tests** (example in `contract.spec.ts`):
 
    ```bash
-   npm test
+   yarn test
    ```
 
    Test commands will verify the correctness of contract method calls (e.g., `increment`, `Add`), ensuring proper initialization and transaction status.
 
-### 5. Working with the Test Network
+### 5. Template Project Overview
+
+The Tact template project comes pre-configured to kickstart your new Tact project. It includes:
+
+- The Tact compiler.
+- TypeScript.
+- Jest integrated with the tact-emulator.
+- A sample demonstrating how to run tests.
+
+Commands available:
+
+- `yarn test`: To test the contract.
+- `yarn build`: To build the contract.
+- `yarn lint`: To find code issues in the contract.
+- `yarn deploy`: To deploy the contract.
+
+### 6. Deployment Guide
+
+To deploy a contract, follow these steps:
+
+1. Define the `contract.tact` file that will serve as the entry point for your contract.
+2. Customize the `contract.deploy.ts` file based on your `contract.tact` to generate a deployment link. It is crucial to ensure proper invocation of the `init()` function within the contract.
+3. If you rename `contract.tact`, make sure to update `tact.config.json` accordingly. Refer to the Tact Documentation for detailed information.
+
+### 7. Testing
+
+You can find examples of contract tests in `contract.spec.ts`. For more information about testing, see the Tact Documentation.
+
+To add new test files to your contracts, create `*.spec.ts` files similar to the template's example. These will be automatically included in the test process.
+
+### 8. Working with the Test Network
 
 To get test coins (Toncoin) for experiments, use the bot `@testgiver_ton_bot`. Once you receive the coins, you can pay for transactions during deployment and tests.
 
-### 6. Additional Details
+### 9. Additional Details
 
 - **Supported Types**: Tact supports types like `Context`, `StdAddress`, `VarAddress`, `SendParameters`, `Int`, `Bool`, `Builder`, `Slice`, `Cell`, `Address`, `String`, `StringBuilder`, `StateInit`.
 - **Project Structure**:
   - `src/contract.tact`: Main smart contract file.
   - `src/contract.spec.ts`: Tests for the contract.
   - `src/contract.deploy.ts`: Deployment script.
-  - `src/contract.read.ts`: File for interacting with a deployed contract (run with `yarn read` or `npm run read`).
+  - `src/contract.read.ts`: File for interacting with a deployed contract (run with `yarn read` or `yarn read`).
 
 By adhering to this structure, you can efficiently develop, deploy, and test smart contracts in Tact, leveraging all the capabilities of the TON ecosystem.
 
