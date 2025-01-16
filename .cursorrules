@@ -42,9 +42,11 @@ Tact is a programming language designed for smart contracts in the TON ecosystem
 Key reserved keywords in Tact:
 
 ```plaintext
-as, asm, break, continue, initOf, init, receive, bounced, delete, do, else, error, false, repeat, from,
-fun, get, if, try, catch, with, import, interface, message, map, new, null, return, struct, super, self,
-throw, true, while
+fun, let, return, receive, native, primitive, null, 
+if, else, while, repeat, do, until, try, catch, 
+foreach, as, map, message, mutates, extends, external, import,
+with, trait, initOf, override, abstract, virtual, 
+inline, const, extend, public, true, false, null
 ```
 
 ### 2. Key Global Functions in Tact
@@ -61,7 +63,7 @@ Additionally, there are global variables and system methods for calculating fees
 
 ### 3. Example of a Simple Smart Contract
 
-```typescript
+```tact
 import "@stdlib/deploy";
 
 message Add {
