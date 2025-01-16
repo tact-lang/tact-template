@@ -2,11 +2,38 @@
 
 This template comes pre-configured to kickstart your new Tact project. It includes the Tact compiler, TypeScript, Jest integrated with [tact-emulator](https://github.com/tact-lang/tact-emulator), and a sample demonstrating how to run tests.
 
+## How to use
+
+First, let's install all the dependencies:
+
 ```shell
-yarn test # To test contract
-yarn build # To build contract
-yarn lint # To find code issues in contract
-yarn deploy # To deploy contract
+yarn install
+```
+
+Now we're ready to build our contract:
+
+```shell
+yarn build
+```
+
+Once you've built our contract, you can deploy it:
+
+```shell
+yarn deploy
+```
+
+Let's look at some other useful commands.
+
+To test your contract after changes, run:
+
+```shell
+yarn test
+```
+
+If you want to quickly check your changes for validity, run:
+
+```shell
+yarn lint
 ```
 
 ## Deployment
