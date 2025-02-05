@@ -3,7 +3,7 @@
   "scripts": {
     "build": "tact --config ./tact.config.json",
     "lint": "yarn misti ./tact.config.json",
-    "test": "jest",
+    "test": "yarn build && jest",
     "deploy": "ts-node ./sources/contract.deploy.ts",
     "read": "ts-node ./sources/contract.read.ts"
   },
