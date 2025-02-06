@@ -4,7 +4,7 @@ import { Address, contractAddress } from "@ton/core";
 import { SampleTactContract } from "./output/sample_SampleTactContract";
 import { prepareTactDeployment } from "@tact-lang/deployer";
 
-(async () => {
+(async (): Promise<void> => {
     // Parameters
     let testnet = true;
     let packageName = "sample_SampleTactContract.pkg";
