@@ -2,7 +2,7 @@ import { Address, contractAddress} from "@ton/core";
 import { TonClient4 } from "@ton/ton";
 import { SampleTactContract } from "./output/sample_SampleTactContract";
 
-(async () => {
+(async (): Promise<void> => {
     const client = new TonClient4({
         endpoint: "https://sandbox-v4.tonhubapi.com", // 🔴 Test-net API endpoint
     });
