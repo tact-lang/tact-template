@@ -798,10 +798,10 @@
     prando "^6.0.1"
     zod "^3.22.4"
 
-"@tact-lang/compiler@~1.5.3":
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.5.3.tgz#cbf1bb35e6b9303f541dfbab444303b91775e1b2"
-  integrity sha512-BxSCWfIQJUa0RC2ZltYfgTeN+3dRjMs4Hdxq61REfghpRiSU0IKdkLPGqJH/5zimzFFhjD4mhR0aFS71zUH9hA==
+"@tact-lang/compiler@~1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.5.4.tgz#c1addbdde51f26cc2358f08e276eb735c4103408"
+  integrity sha512-r47LoKG458EbFoAz01AT77J7ymhDr1soBRZWZayEuBLWkxMRuK8IKWZb5hiQH1u8sCOankNtJjtVbxXmsb8SdA==
   dependencies:
     "@tact-lang/opcode" "^0.0.16"
     "@ton/core" "0.58.1"
