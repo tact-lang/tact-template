@@ -1,0 +1,74 @@
+---
+description: Optionals Variables and struct fields can be optional by adding ?, allowing them to hold null and reducing state size when unused. Accessing Values Optional variables require a null check before use; appending !! ensures a value is present but throws an error if null. Use Cases Useful for storing optional data efficiently and handling nullable states in smart contracts.
+globs: *.tact
+---
+Optionals
+=========
+
+Optionals are variables or struct fields that can be null and don't necessarily hold a value. They are useful to reduce state size when the variable isn't necessarily used.
+
+You can make any variable optional by adding `?` after its type.
+
+Optional variables that are not defined hold the `null` value. You cannot access them without checking for `null` first.
+
+If you're certain an optional variable is not null, append to the end of its name `!!` to access its value. Trying to access the value without `!!` will result in a compilation error.
+
+```tact
+    import "@stdlib/deploy";
+    
+    struct StrctOpts {
+        sa: Int?;
+        sb: Bool?;
+        sc: Address?;
+    }
+    
+    message MsgOpts {
+        ma: Int?;
+        mb: Bool?;
+        mc: Address?;
+        md: StrctOpts?;
+    }
+    
+    contract Optionals with Deployable {
+    
+        ca: Int?;
+        cb: Bool?;
+        cc: Address?;
+        cd: StrctOpts?;
+    
+        init(a: Int?, b: Bool?, c: Address?) {
+            self.ca = a;
+            self.cb = b;
+            self.cc = c;
+            self.cd = StrctOpts{sa: null, sb: true, sc: null};
+        }
+    
+        receive(msg: MsgOpts) {
+            let i: Int = 12;
+            if (msg.ma != null) {
+                i = i + msg.ma!!; // !! tells the compiler this can't be null
+                self.ca = i;
+            }
+        }
+    
+        get fun optInt(): Int? {
+            return self.ca;
+        }
+    
+        get fun optIntVal(): Int {
+            if (self.ca == null) {
+                return -1;
+            } else {
+                return self.ca!!; // !! tells the compiler this can't be null
+            }
+        }
+    
+        get fun optNested(): Int? {
+            if (self.cd != null && (self.cd!!).sa != null) {
+                return (self.cd!!).sa!!; // !! tells the compiler this can't be null
+            } else {
+                return null;
+            }
+        }
+    }
+```

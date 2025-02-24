@@ -1,0 +1,71 @@
+---
+description: Parent-Child Relationship describes a common smart contract pattern where a single parent contract (deployed by the user) can create multiple child contracts dynamically. The parent manages deployment, allowing unbounded scalability. This pattern is useful for modular and scalable contract architectures on TON.
+globs: *.tact
+---
+Parent-Child Relationship
+=========================
+
+A very common design pattern in Tact is implementing two contracts with a parent-child relationship.
+
+Under this pattern, we would normally have a single instance parent which is deployed by the user. This is the `TodoParent` contract in this example.
+
+The child contract `TodoChild` will have multiple instances. These instances will normally be deployed by the parent by sending the parent a message.
+
+Try this out. Press the Send "deploy another" to parent button multiple times to send the message to the parent and instruct it to deploy more and more children.
+
+Also notice how we can omit the `Deployable` trait from the children. This trait is mostly useful for contracts that users deploy. Since the user only deploys the parent, omitting the trait from the children will explain our intent to readers.
+
+Unbounded data structures
+-------------------------
+
+An interesting property of this pattern is that the number of potential children is unbounded! We can have an infinite number of children.
+
+In general, inifinite data structures that can actually scale to billions are very difficult to implement on blockchain efficiently. This pattern showcases the power of TON.
+
+```tact
+    import "@stdlib/deploy";
+    
+    // we have multiple instances of the children
+    contract TodoChild {
+    
+        seqno: Int as uint64;
+     
+        // when deploying an instance, we must specify its index (sequence number)
+        init(seqno: Int) {
+            self.seqno = seqno;
+        }
+    
+        // this message handler will just debug print the seqno so we can see when it's called
+        receive("identify") {
+            dump(self.seqno);
+        }
+    }
+    
+    // we have one instance of the parent
+    contract TodoParent with Deployable {
+    
+        numChildren: Int as uint64;
+     
+        init() {
+            self.numChildren = 0;
+        }
+    
+        // this message handler will cause the contract to deploy another child
+        receive("deploy another") {
+            self.numChildren = self.numChildren + 1;
+            let init: StateInit = initOf TodoChild(self.numChildren);
+            send(SendParameters{
+                to: contractAddress(init),
+                value: ton("0.1"),              // pay for message, the deployment and give some TON for storage
+                mode: SendIgnoreErrors,
+                code: init.code,                // attaching the state init will cause the message to deploy
+                data: init.data,
+                body: "identify".asComment()    // we must piggyback the deployment on another message
+            });
+        }
+    
+        get fun numChildren(): Int {
+            return self.numChildren;
+        }
+    }
+```

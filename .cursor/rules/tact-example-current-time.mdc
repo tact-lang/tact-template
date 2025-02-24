@@ -1,0 +1,50 @@
+---
+description: Current Time in Tact is obtained using now(), which returns Unix time (seconds since 1 January 1970). Block Timing Transactions execute when added to a block, so now() reflects the block timestamp. Usage Store time as Int as uint32, and calculate time differences by subtraction.
+globs: *.tact
+---
+Current Time
+============
+
+Many blockchains rely on the current _block number_ to give a sense of progress to contracts. This approach isn't well suited for TON because contracts on TON can run on multiple workchains and those may have different block seqnos.
+
+In TON, the best practice is to rely on the current time instead, which is available by calling `now()`. Standard [unix time](mdc:https:/en.wikipedia.org/wiki/Unix_time) is returned, meaning the number of seconds since 1 January 1970.
+
+Transactions are not executed until validators add them to a new block. The current time will therefore be the timestamp of the new block when called in the context of a _receiver_.
+
+If you need to store the time in state or encode it in a message, use `Int as uint32`.
+
+If you need to compare two points in time simply subtract the earlier from the later. This will give you the number of seconds between the two. Divide by 60 to get the difference in minutes, by 60 \* 60 to get the difference in hours and by 24 \* 60 \* 60 to get the difference in days.
+
+```tact
+    import "@stdlib/deploy";
+    
+    contract CurrentTime with Deployable {
+    
+        deployTime: Int as uint32;
+    
+        init() {
+            self.deployTime = now(); // returns unix time, the number of seconds since the epoch
+        }
+    
+        receive("wait 10s") {
+            require(now() - self.deployTime > 10, "Did not wait long enough");
+            dump("thanks for waiting 10 seconds");
+        }
+    
+        receive("wait 10d") {
+            require(now() - self.deployTime > 10*24*60*60, "Did not wait long enough");
+            dump("thanks for waiting 10 days");
+        }
+    
+        get fun unixTime(): Int {
+            return now();
+        }
+    
+        get fun stringTime(): String {
+            let sb: StringBuilder = beginString();
+            sb.append(now().toString());
+            sb.append(" seconds elapsed since 1 January 1970");
+            return sb.toString();
+        }
+    }
+```

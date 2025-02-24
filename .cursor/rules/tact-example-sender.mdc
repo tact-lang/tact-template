@@ -1,0 +1,49 @@
+---
+description: Message Sender Every incoming message has a sender whose address can be verified. Authentication Identifying the sender ensures control and security.
+globs: *.tact
+---
+Message Sender
+==============
+
+Every incoming message is sent from some contract that has an address.
+
+You can query the address of the message sender by calling `sender()`. Alternatively, the address is also available through `context().sender`.
+
+The sender during execution of the `init()` method of the contract is the address who deployed the contract.
+
+Authenticating messages
+-----------------------
+
+The main way to authenticate an incoming message, particularly for priviliges actions, is to verify the sender. This field is secure and impossible to fake.
+
+**Info**: More detail about context can find in here: [context()](mdc:https:/docs.tact-lang.org/language/ref/common#context)
+
+```tact
+    import "@stdlib/deploy";
+    
+    contract MessageSender with Deployable {
+    
+        deployer: Address;
+        lastSender: Address;
+     
+        init() {
+            self.deployer = sender(); // sender() of init is who deployed the contract
+            self.lastSender = newAddress(0, 0); // zero address
+        }
+    
+        receive("who") {
+            if (sender() == self.deployer) {
+                dump("deployer");
+            } else {
+                dump("not deployer!");
+            }
+        }
+     
+        receive("hello") {
+            if (sender() != self.lastSender) {
+                self.lastSender = sender();
+                dump("hello new sender!");
+            }
+        }
+    }
+```
