@@ -9,7 +9,7 @@ import { SampleTactContract } from "./output/sample_SampleTactContract";
 
     // Parameters
     let owner = Address.parse("kQBM7QssP28PhrctDOyd47_zpFfDiQvv5V9iXizNopb1d2LB");
-    let init = await SampleTactContract.init(owner);
+    let init = await SampleTactContract.init(owner, 0n);
     let contract_address = contractAddress(0, init);
 
     // Prepareing
