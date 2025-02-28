@@ -1,0 +1,130 @@
+---
+title: 基本trait
+description: Tact 中的每个合约和特性都隐含继承BaseTrait 特性
+prev:
+  link: /zh-cn/ref/evolution/otp-006
+  label: OTP-006：合约包
+---
+
+Tact 中的每个[合约](/zh-cn/book/contracts)和[特性](/zh-cn/book/types#traits)都会隐式[继承](/zh-cn/book/contracts#traits) `BaseTrait{:tact}` 特性，该特性包含许多适用于各种合约的[内部函数](/zh-cn/book/contracts#internal-functions)，以及一个面向 Tact 高级用户的常量 `self.storageReserve{:tact}`。
+
+## 常数
+
+### self.storageReserve {#self-storagereserve}
+
+```tact
+virtual const storageReserve: Int = 0;
+```
+
+用法示例：
+
+```tact
+contract AllYourStorageBelongsToUs {
+    // This would change the behavior of self.forward() function,
+    // causing it to try reserving this amount of nanoToncoins before
+    // forwarding a message with SendRemainingBalance mode
+    override const storageReserve: Int = ton("0.1");
+}
+```
+
+## 函数
+
+### self.reply {#self-reply}
+
+```tact
+virtual fun reply(body: Cell?);
+```
+
+使用以下参数调用 [`self.forward(){:tact}`](#self-forward)函数的别名：
+
+```tact
+self.forward(sender(), body, true, null);
+//           ↑         ↑     ↑     ↑
+//           |         |     |     init: StateInit?
+//           |         |     bounce: Bool
+//           |         body: Cell?
+//           to: Address
+```
+
+示例用法：
+
+```tact
+// 这条信息会反弹给我们！
+self.reply("Beware, this is my reply to you!".asComment());
+```
+
+### self.notify {#self-notify}
+
+```tact
+virtual fun notify(body: Cell?);
+```
+
+使用以下参数调用 [`self.forward(){:tact}`](#self-forward)函数的别名：
+
+```tact
+self.forward(sender(), body, false, null);
+//           ↑         ↑     ↑      ↑
+//           |         |     |      init: StateInit?
+//           |         |     bounce: Bool
+//           |         body: Cell?
+//           to: Address
+```
+
+示例用法：
+
+```tact
+// 此消息不会跳转！
+self.notify("Beware, this is my reply to you!".asComment());
+```
+
+### self.forward {#self-forward}
+
+```tact
+virtual fun forward(to: Address, body: Cell?, bounce: Bool, init: StateInit?);
+```
+
+[将消息排入队列](/zh-cn/book/send#outbound-message-processing)（可回弹或不可回弹），以发送到指定的地址 `to`。 您可以选择提供消息的 `body` 和 [`init` 包](/zh-cn/book/expressions#initof)。
+
+当 [`self.storageReserve{:tact}`](#self-storagereserve) 常量被覆盖为大于 $0$ 时，在发送消息之前，它会尝试从剩余余额中预留 `self.storageReserve{:tact}` 数量的 [nanoToncoins][nano]，然后再以 [`SendRemainingBalance{:tact}`](https://docs.tact-lang.org/book/message-mode#base-modes) 模式进行发送 ($128$)。
+
+如果预留尝试失败，或者在没有尝试的默认情况下，消息将改为使用 [`SendRemainingValue{:tact}`](https://docs.tact-lang.org/book/message-mode#base-modes) ($64$) 模式发送。
+
+:::note
+
+  请注意，`self.forward(){:tact}` 永远不会在余额上额外发送 [nanoToncoins][nano]。要通过单条消息发送更多的 [nanoToncoins][nano]，请使用 [`send(){:tact}`](/zh-cn/ref/core-common#send) 函数。
+
+:::
+
+用法示例：
+
+```tact
+import "@stdlib/ownable";
+
+message PayoutOk {
+    address: Address;
+    value: Int as coins;
+}
+
+contract Payout with Ownable {
+    completed: Bool;
+    owner: Address;
+
+    init(owner: Address) {
+        self.owner = owner;
+        self.completed = false;
+    }
+
+    // ... some actions there ...
+
+    // Bounced receiver function, which is called when the specified outgoing message bounces back
+    bounced(msg: bounced<PayoutOk>) {
+        // Reset completed flag if our message bounced
+        self.completed = false;
+
+        // Send a notification that the payout failed using the remaining funds for processing this send
+        self.forward(self.owner, "Payout failed".asComment(), false, null);
+    }
+}
+```
+
+[nano]: /zh-cn/book/integers#nanotoncoin

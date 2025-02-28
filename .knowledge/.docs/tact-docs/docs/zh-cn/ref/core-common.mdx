@@ -1,0 +1,248 @@
+---
+title: 常见问题
+description: Tact 核心库中的常用全局静态函数
+---
+
+最常用的内置 [全局静态函数] 列表(/book/functions#global-static-functions)。
+
+## 上下文
+
+### now
+
+```tact
+fun now(): Int
+```
+
+返回当前 [Unix 时间](https://en.wikipedia.org/wiki/Unix_time)。
+
+用法示例：
+
+```tact
+let timeOffset: Int = now() + 1000; // thousand seconds from now()
+```
+
+### myBalance
+
+```tact
+fun myBalance(): Int;
+```
+
+返回当前交易的 [计算阶段](https://docs.ton.org/learn/tvm-instructions/tvm-overview#compute-phase) 开始时智能合约的 [nano Toncoins](/zh-cn/book/integers#nanotoncoin) 余额。
+
+用法示例：
+
+```tact
+let iNeedADolla: Int = myBalance();
+```
+
+:::caution
+
+  请注意，Tact 的 [所有信息发送函数](/zh-cn/book/send) 可以更改 _实际_ 合约的余额，但 _不会_ 更新此函数返回的值。
+
+:::
+
+### myAddress
+
+```tact
+fun myAddress(): Address;
+```
+
+以[`Address{:tact}`][p]的形式返回当前智能合约的地址。
+
+用法示例：
+
+```tact
+let meMyselfAndI: Address = myAddress();
+```
+
+### sender
+
+```tact
+fun sender(): Address;
+```
+
+返回当前信息发件人的 [`Address{:tact}`][p]。
+
+用法示例：
+
+```tact
+contract MeSee {
+    receive() {
+        let whoSentMeMessage: Address = sender();
+    }
+}
+```
+
+:::caution
+
+  对于 [getter 函数](/zh-cn/book/contracts#getter-functions)，行为是未定义的，因为它们不能有发送者，也不能发送信息。
+
+:::
+
+:::note
+
+  为了减少 gas 用量，当您只需要知道消息的发件人时，请使用此函数而不是调用 [`context().sender{:tact}`](#context)。
+
+:::
+
+### context
+
+```tact
+fun context(): Context;
+```
+
+返回 `Context{:tact}` [Struct](/zh-cn/book/structs-and-messages#structs)，包含：
+
+| 字段      | 类型                      | 描述
+| :-------- | :------------------------ | :---
+| `bounced` | [`Bool{:tact}`][bool]     | 传入消息的[Bounced](https://ton.org/docs/learn/overviews/addresses#bounceable-vs-non-bounceable-addresses) 标志.
+| `sender`  | [`Address{:tact}`][p]     | 发送方在 TON 区块链上的内部地址。
+| `value`   | [`Int{:tact}`][int]       | 信息中 [nanoToncoins](/zh-cn/book/integers#nanotoncoin) 的数量。
+| `raw`     | [`Slice{:tact}`][slice]   | 信息的其余部分作为 [`Slice{:tact}`][slice]。 它遵循 TON 的 [内部消息布局](https://docs.ton.org/develop/smart-contracts/messages#message-layout)，从目标 [`Address{:tact}`][p] (`dest:MsgAddressInt` 在 [TL-B 记法](https://docs.ton.org/develop/data-formats/tl-b-language)) 开始。
+
+示例用法：
+
+```tact
+let ctx: Context = context();
+require(ctx.value != 68 + 1, "Invalid amount of nanoToncoins, bye!");
+```
+
+:::note
+
+  请注意，如果您只需要知道谁发送了信息，请使用 [`sender(){:tact}`](#sender) 函数，因为它耗 gas 量较少。
+
+:::
+
+## Addressing
+
+### newAddress
+
+```tact
+fun newAddress(chain: Int, hash: Int): Address;
+```
+
+根据[`chain`id](https://ton-blockchain.github.io/docs/#/overviews/TON_blockchain_overview)和[SHA-256](/zh-cn/ref/core-math#sha256)编码的[`hash`值](https://docs.ton.org/learn/overviews/addresses#account-id)创建一个新的[`Address{:tact}`][p]。
+
+此函数试图尽可能解析 [compile-time](/zh-cn/ref/core-comptime) 中的常数值。
+
+示例用法：
+
+```tact
+let oldTonFoundationAddr: Address =
+    newAddress(0, 0x83dfd552e63729b472fcbcc8c45ebcc6691702558b68ec7527e1ba403a0f31a8);
+    //         ↑  ------------------------------------------------------------------
+    //         |  ↑
+    //         |  sha-256 hash of contract's init package (StateInit)
+    //         chain id: 0 is a workchain, -1 is a masterchain
+```
+
+:::caution
+
+  如果 `chain` 无效，该方法会抛出错误[退出码 136](/zh-cn/book/exit-codes#136)；如果 `chain` 指向主链 ($-1$) 且未启用[主链支持](/zh-cn/book/masterchain)，该方法会抛出错误[退出码 137](/zh-cn/book/exit-codes#137)。
+
+:::
+
+:::note[Useful links:]
+
+  [TON文档中的`chain`（工作链ID）](https://docs.ton.org/learn/overviews/addresses#workchain-id)\
+  [TON文档中的`hash`（账户ID）](https://docs.ton.org/learn/overviews/addresses#account-id)\
+  [合约的初始包（`StateInit{:tact}`）](/zh-cn/book/expressions#initof)
+
+:::
+
+### contractAddress
+
+```tact
+fun contractAddress(s: StateInit): Address;
+```
+
+根据智能合约的 [`StateInit{:tact}`](/zh-cn/book/expressions#initof)，计算智能合约在工作链 $0$ 中的 [`Address{:tact}`][p]。
+
+示例用法：
+
+```tact
+let foundMeSome: Address = contractAddress(initOf SomeContract());
+```
+
+### contractAddressExt
+
+```tact
+fun contractAddressExt(chain: Int, code: Cell, data: Cell): Address;
+```
+
+根据 `chain` id、合约 `code` 和合约初始状态 `data` 计算智能合约的 [`Address{:tact}`][p]。 使用 [`initOf{:tact}`](/zh-cn/book/expressions#initof)表达式获取给定合约的初始 `code` 和初始 `data` 。
+
+用法示例：
+
+```tact
+let initPkg: StateInit = initOf SomeContract();
+let hereBeDragons: Address = contractAddressExt(0, initPkg.code, initPkg.data);
+```
+
+:::caution
+
+  如果 `chain` 无效，该方法会抛出错误[退出码 136](/zh-cn/book/exit-codes#136)；如果 `chain` 指向主链 ($-1$) 且未启用[主链支持](/zh-cn/book/masterchain)，该方法会抛出错误[退出码 137](/zh-cn/book/exit-codes#137)。
+
+:::
+
+:::note
+
+  要使用该功能，必须在 [configuration file](/zh-cn/book/config).
+  中为当前项目将编译器选项 `debug` 设置为 `true{:tact}`：[调试](/zh-cn/book/debug)。
+
+:::
+
+## 通信
+
+### send
+
+```tact
+fun send(params: SendParameters);
+```
+
+[排序消息](/zh-cn/book/send#outbound-message-processing)，以便使用 [`SendParameters{:tact}`](/zh-cn/book/send) [结构体](/zh-cn/book/structs-and-messages#structs) 发送。
+
+示例用法：
+
+```tact
+send(SendParameters{
+    to: sender(),    // back to the sender,
+    value: ton("1"), // with 1 Toncoin (1_000_000_000 nanoToncoin),
+                     // and no message body
+});
+```
+
+:::note[Useful links:]
+
+  [Sending messages in the Book](/zh-cn/book/send)\
+  [Message `mode` in the Book](/zh-cn/book/message-mode)\
+  [Single-contract communication in the Cookbook](/zh-cn/cookbook/single-communication)
+
+:::
+
+### emit
+
+```tact
+fun emit(body: Cell);
+```
+
+[将消息排序的](/zh-cn/book/send#outbound-message-processing) `body` 发送到外部世界，目的是进行日志记录并在链外进行后续分析。 该信息没有收件人，与使用 Tact 的其他信息发送功能相比更省 gas。
+
+使用示例
+
+```tact
+emit("Catch me if you can, Mr. Holmes".asComment()); // asComment() converts a String to a Cell
+```
+
+:::note
+
+  要分析 `emit(){:tact}` 调用，必须查看合约产生的 [外部信息](/zh-cn/book/external)。
+
+  了解更多信息：[通过 `emit(){:tact}`记录日志](/zh-cn/book/debug#logging)。
+
+:::
+
+[p]: /zh-cn/book/types#primitive-types
+[bool]: /zh-cn/book/types#booleans
+[int]: /zh-cn/book/integers
+[slice]: /zh-cn/book/cells#slices

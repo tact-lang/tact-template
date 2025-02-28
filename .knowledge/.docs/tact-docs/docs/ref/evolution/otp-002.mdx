@@ -1,0 +1,101 @@
+---
+title: "OTP-002: Contract ABI"
+description: "This proposal defines an ABI to communicate with deployed smart contracts"
+sidebar:
+  order: 2
+---
+
+The contract's Application Binary Interface (ABI) defines a format containing information about the contract's receivers, data structures, getters, etc.
+
+## Motivation
+
+ABI is a tool that allows developers to generate handy bindings, UIs, and so on. One of the best consumer usages would be using a DAO and being able to confirm what exactly it is trying to do before signing a transaction.
+
+## Specification
+
+ABI is defined as a JSON file, usually with an `.abi` extension:
+
+```json
+{
+  "name": "MyContract",
+  "types": [
+    {
+      "name": "StateInit",
+      "header": null,
+      "fields": [
+        {
+          "name": "code",
+          "type": {
+            "kind": "simple",
+            "type": "cell",
+            "optional": false
+          }
+        },
+        {
+          "name": "data",
+          "type": {
+            "kind": "simple",
+            "type": "cell",
+            "optional": false
+          }
+        }
+      ]
+    },
+    // ...etc.
+  ],
+  "receivers": [
+    {
+      "receiver": "internal",
+      "message": {
+        "kind": "text",
+        "text": "Vote!"
+      }
+    },
+    {
+      "receiver": "internal",
+      "message": {
+        "kind": "typed",
+        "type": "Deploy"
+      }
+    }
+  ],
+  "getters": [
+    {
+      "name": "gas",
+      "methodId": 92180,
+      "arguments": [],
+      "returnType": {
+        "kind": "simple",
+        "type": "int",
+        "optional": false,
+        "format": 257
+      }
+    }
+  ],
+  "errors": {
+    "2": {
+      "message": "Stack underflow"
+    },
+    "3": {
+      "message": "Stack overflow"
+    }
+    // ...etc.
+  },
+  "interfaces": [
+    "org.ton.introspection.v0",
+    "org.ton.abi.ipfs.v0",
+    "org.ton.deploy.lazy.v0",
+    "org.ton.debug.v0"
+  ]
+}
+```
+
+## Drawbacks
+
+- ABI is in JSON format, which is both human and machine-readable, but not the most compact — binary representation could be better, but is not critical for now.
+
+- ABI has no strict JSON or TypeScript schema defined, and thus is subject to frequent changes.
+
+## Prior art
+
+- [OTP-001](/ref/evolution/otp-001): A complementary proposal that provides additional context.
