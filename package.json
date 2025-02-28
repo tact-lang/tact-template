@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@nowarp/misti": "~0.5.0",
-    "@tact-lang/compiler": "~1.5.4",
+    "@tact-lang/compiler": "^1.6.0",
     "@tact-lang/deployer": "^0.2.0",
     "@tact-lang/ton-abi": "^0.0.3",
     "@tact-lang/ton-jest": "^0.0.4",

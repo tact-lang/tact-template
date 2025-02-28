@@ -9,7 +9,7 @@ import { prepareTactDeployment } from "@tact-lang/deployer";
     let testnet = true;
     let packageName = "sample_SampleTactContract.pkg";
     let owner = Address.parse("kQBM7QssP28PhrctDOyd47_zpFfDiQvv5V9iXizNopb1d2LB");
-    let init = await SampleTactContract.init(owner);
+    let init = await SampleTactContract.init(owner, 0n);
 
     // Load required data
     let address = contractAddress(0, init);
