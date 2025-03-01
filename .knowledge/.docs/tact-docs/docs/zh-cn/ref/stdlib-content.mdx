@@ -1,0 +1,39 @@
+---
+title: "@stdlib/content"
+description: 提供一个将字符串编码为 Cell 的链下链接的函数
+---
+
+提供一个将 [`String{:tact}`][p] 编码为 [`Cell{:tact}`][cell] 的链下链接的函数。
+
+要使用该库，请导入 `@stdlib/content`：
+
+```tact
+import "@stdlib/content";
+```
+
+## 函数
+
+### createOffchainContent
+
+```tact
+fun createOffchainContent(link: String): Cell;
+```
+
+将链下链接(link) [strings][p] 编码为[`cell{:tact}`][cell]。
+
+源码:
+
+```tact
+fun createOffchainContent(link: String): Cell {
+    let builder: StringBuilder = beginStringFromBuilder(beginCell().storeUint(0x01, 8));
+    builder.append(link);
+    return builder.toCell();
+}
+```
+
+## 资料来源
+
+- [content.tact](https://github.com/tact-lang/tact/blob/61541b7783098e1af669faccd7d2334c10981c72/stdlib/libs/content.tact)
+
+[p]: /zh-cn/book/types#primitive-types
+[cell]: /zh-cn/book/cells#cells

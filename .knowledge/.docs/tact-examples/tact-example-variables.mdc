@@ -1,0 +1,54 @@
+---
+description: This section explains Variables in Tact, focusing on persistent state variables and local variables. Persistent variables retain values between executions but consume gas due to storage costs. They can only be modified within receivers, which process transactions. Local variables exist temporarily during execution and do not persist. Getters can read all variables but cannot modify state, making them gas-free.
+globs: *.tact
+---
+Variables
+=========
+
+The most important variables are those that are persisted in state and retain their value between contract executions. They must be defined in the scope of the contract like `contractVar1`.
+
+Persisting data in state costs gas. The contract must pay rent periodically from its balance. State storage is expensive, about [4 TON per MB per year](mdc:https:/ton.org/docs/develop/smart-contracts/fees#how-to-calculate-fees). If the contract runs out of balance, the data will be deleted. If you need to store large amounts of data, like images, a service like [TON Storage](mdc:https:/ton.org/docs/participate/ton-storage/storage-faq) would be more suitable.
+
+Persistent state variables can only change in _receivers_ by sending messages as transactions. **Sending these transactions will cost gas to users.**
+
+Executing _getters_ is read-only, they can access all variables, but cannot change state variables. They are free to execute and don't cost any gas.
+
+Local variables like `localVar1` are temporary. They're not persisted to state. You can define them in any function and they will only exist in run-time during the execution of the function. You can change their value in _getters_ too.
+
+```tact
+    import "@stdlib/deploy";
+    
+    contract Variables with Deployable {
+    
+        // contract variables are persisted in state and can change their value between transactions
+        // they cost rent per their specified size
+        contractVar1: Int as coins = ton("1.26");
+        contractVar2: Int as uint64;
+    
+        init(arg1: Int) {
+            // contract variables support complex initializations that are calculated in run-time
+            self.contractVar2 = min(arg1, pow(2, 64) - 1);
+        }
+    
+        // receivers handle incoming messages and can change state
+        receive("increment") {
+            // local variables are temporary, not persisted in state
+            let localVar1: Int = 100 * 1000;
+            localVar1 = localVar1 * 2;
+    
+            // contract variables that are persisted in state can only change in receivers
+            self.contractVar1 = self.contractVar1 + 1;
+            self.contractVar2 = self.contractVar2 + 1;
+        }
+    
+        // getters are executed by users to query data and can't change state
+        get fun sum(arg1: Int): Int {
+            // local variables are temporary, not persisted in state
+            let localVar1: Int = 100 * 1000;
+            localVar1 = localVar1 * 2;
+    
+            // getters can access everything but for read-only operations only
+            return arg1 + self.contractVar1 + localVar1;
+        }
+    }
+```

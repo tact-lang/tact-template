@@ -1,0 +1,115 @@
+---
+description: Maps are dictionary-like structures that store key-value pairs, where keys can be Int or Address. Accessing Values Use get() to retrieve values (null if missing) and set() to insert or update values. Usage Constraints Designed for a limited number of items; large-scale storage requires alternative architectures like contract sharding.
+globs: *.tact
+---
+Maps
+====
+
+Maps are a dictionary type that can hold an arbitrary number of items, each under a different key.
+
+The keys in maps can either be an `Int` type or an `Address` type.
+
+You can check if a key is found in the map by calling the `get()` method. This will return `null` if the key is missing or the value if the key is found. Replace the value under a key by calling the `set()` method.
+
+Integers in maps stored in state currently use the largest integer size (257-bit). Future versions of Tact will let you optimize the encoding size.
+
+Limit the number of items
+-------------------------
+
+Maps are designed to hold a limited number of items. Only use a map if you know the upper bound of items that it may hold. It's also a good idea to [write a test](mdc:https:/github.com/tact-lang/tact-emulator) to add the maximum number of elements to the map and see how gas behaves under stress.
+
+If the number of items is unbounded and can potentially grow to billions, you'll need to architect your contract differently. We will discuss unbounded maps later on under the topic of contract sharding.
+
+```tact
+    import "@stdlib/deploy";
+    
+    struct TokenInfo {
+        ticker: String;
+        decimals: Int;
+    }
+    
+    // messages can contain maps
+    message Replace {
+        items: map<Int, Address>;
+    }
+    
+    contract Maps with Deployable {
+    
+        // maps with Int as key
+        mi1: map<Int, TokenInfo>;
+        mi2: map<Int, Bool>;
+        mi3: map<Int, Int>;
+        mi4: map<Int, Address>;
+        
+        // maps with Address as key
+        ma1: map<Address, TokenInfo>;
+        ma2: map<Address, Bool>;
+        ma3: map<Address, Int>;
+        ma4: map<Address, Address>;
+    
+        init(arg: map<Int, Bool>) {
+            // no need to initialize maps if they're empty
+            self.mi2 = arg;
+        }
+    
+        receive("set keys") {
+            // keys are Int
+            self.mi1.set(17, TokenInfo{ticker: "SHIB", decimals: 9});
+            self.mi2.set(0x9377433ff21832, true);
+            self.mi3.set(pow(2,240), pow(2,230));
+            self.mi4.set(-900, address("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N"));
+            // keys are Address
+            self.ma1.set(address("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N"), TokenInfo{ticker: "DOGE", decimals: 18});
+            self.ma2.set(address("UQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqEBI"), true);
+            self.ma3.set(address("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N"), ton("1.23"));
+            self.ma4.set(address("UQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqEBI"), myAddress());
+        }
+    
+        receive("delete keys") {
+            // keys are Int
+            self.mi1.set(17, null);
+            self.mi2.set(0x9377433ff21832, null);
+            self.mi3.set(pow(2,240), null);
+            self.mi4.set(-900, null);
+            // keys are Address
+            self.ma1.set(address("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N"), null);
+            self.ma2.set(address("UQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqEBI"), null);
+            self.ma3.set(address("EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N"), null);
+            self.ma4.set(address("UQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqEBI"), null);
+        }
+    
+        receive("clear") {
+            self.mi1 = emptyMap();
+            self.mi2 = emptyMap();
+            self.mi3 = emptyMap();
+            self.mi4 = emptyMap();
+            self.ma1 = emptyMap();
+            self.ma2 = emptyMap();
+            self.ma3 = emptyMap();
+            self.ma4 = emptyMap();
+        }
+    
+        receive(msg: Replace) {
+            // replace all items in the map with those coming in the message
+            self.mi4 = msg.items;
+        }
+    
+        // if the key is not found, the get() method returns null
+        get fun oneItem(key: Int): Address? {
+            return self.mi4.get(key);
+        }
+    
+        get fun itemCheck(): String {
+            if (self.mi1.get(17) == null) {
+                return "not found";
+            }
+            let item: TokenInfo = self.mi1.get(17)!!; // !! tells the compiler this can't be null
+            return item.ticker;
+        }
+    
+        // you can return maps from getters
+        get fun allItems(): map<Address, TokenInfo> {
+            return self.ma1;
+        }
+    }
+```

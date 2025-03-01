@@ -1,0 +1,82 @@
+---
+description: This section explains Receivers and Messages in Tact, which are the only way contracts communicate on TON. Users and contracts send messages to trigger specific actions, and each message incurs a gas cost as it executes in a transaction. Receivers (receive()) handle incoming messages, allowing state modifications. Messages can be binary (structured) or textual (string-based), with binary messages carrying arguments while textual messages cannot. Tact automatically routes messages to the appropriate receiver based on type.
+globs: *.tact
+---
+Receivers and Messages
+======================
+
+In TON, users interact with contracts by sending them messages. Different contracts can only communicate with each other by sending each other messages.
+
+Since users actually use wallet contracts, messages from users are actually messages coming from just another contract.
+
+Sending a message to a contract costs gas and is processed in the course of a transaction. The transaction executes when validators add the transaction to a new block. This can take a few seconds. Messages are also able to change the contract's persistent state.
+
+Receivers
+---------
+
+When designing your contract, make a list of every operation that your contract supports, then, define a message for each operation, and finally, implement a handler for each message containing the logic of what to do when it arrives.
+
+Contract methods named `receive()` are the handlers that process each incoming message type. Tact will automatically route every incoming message to the correct receiver listening for it according to its type. A message is only handled by one receiver.
+
+Messages are defined using the `message` keyword. They can carry input arguments. Notice that for integers, you must define the encoding size, just like in state variables. When somebody sends the message, they serialize it over the wire.
+
+```tact
+    import "@stdlib/deploy";
+    
+    // this message will cause our contract to add an amount to the counter
+    message Add {
+        amount: Int as uint32;
+    }
+    
+    // this message will cause our contract to subtract an amount from the counter
+    message Subtract {
+        amount: Int as uint32;
+    }
+    
+    // this message will cause our contract to do a complex math operation on the counter
+    message MultiMath {
+        add: Int as uint32;
+        subtract: Int as uint32;
+        multiply: Int as uint32;
+    }
+    
+    contract Receivers with Deployable {
+    
+        val: Int as int64;
+     
+        init() {
+            self.val = 0;
+        }
+    
+        // handler for the "Add" message - this is a binary message that has an input argument (amount)
+        receive(msg: Add) {
+            self.val = self.val + msg.amount;
+        }
+    
+        // handler for the "Subtract" message - this is a different binary message although its format is identical
+        receive(msg: Subtract) {
+            self.val = self.val - msg.amount;
+        }
+    
+        // handler for the "MultiMath" message - this is a binary message that holds multiple input arguments
+        receive(msg: MultiMath) {
+            self.val = self.val + msg.add;
+            self.val = self.val - msg.subtract;
+            self.val = self.val * msg.multiply;
+        }
+    
+        // handler for "increment" textual message - this is a textual string message, these cannot carry input arguments
+        receive("increment") {
+            self.val = self.val + 1;
+        }
+    
+        // handler for "decrement" textual message - this is a different textual string message, you can have as many as you want
+        receive("decrement") {
+            self.val = self.val - 1;
+        }
+     
+        get fun value(): Int {
+            return self.val;
+        }
+    }
+```

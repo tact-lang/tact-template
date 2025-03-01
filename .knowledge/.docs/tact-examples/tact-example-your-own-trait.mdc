@@ -1,0 +1,100 @@
+---
+description: Writing Your Own Trait allows you to define reusable logic like Trackable, which tracks messages received. Traits can add state variables, receivers, getters, and methods. Use virtual functions to allow overriding behavior in contracts that adopt the trait.
+globs: *.tact
+---
+Writing Your Own Trait
+======================
+
+Tact doesn't support classical class inheritance and instead introduces the concept of _traits_. Traits are similar to simplified base classes that potentially add state variables, receivers, getters or contract methods.
+
+Contracts can rely on multiple traits. Extract logic into a trait if you have multiple contracts that share this logic.
+
+The Trackable trait
+-------------------
+
+This example shows how to write a new trait that adds simple analytics behavior to any contract.
+
+This trait also makes use of the `virtual` keyword which lets the contract relying on the trait override some of the trait's behaviors. In the example, the default filter behavior ignores messages from owner in the analytics.
+
+The contract relying on the trait can change this default behavior by specifying the `override` keyword and providing a new implementation to this method. In our case, the custom filter is to have no filters.
+
+```tact
+    import "@stdlib/deploy";
+    import "@stdlib/ownable";
+    
+    /////////////////////////////////////////////////////////////////////////////
+    // this trait adds basic analytics to any contract to track how popular it is
+    
+    trait Trackable with Ownable {          // your new trait may rely on other traits
+    
+        // Storage
+    
+        owner: Address;
+        numMessagesReceived: Int;           // your new trait may add state variables but should not specify their size
+    
+        // Receivers
+    
+        receive("reset stats") {            // your new trait may handle specific messages
+            self.requireOwner();
+            self.numMessagesReceived = 0;
+            self.reply("reset done".asComment());
+        }
+    
+        // Getters
+    
+        get fun stats(): Int {              // your new trait may add getters
+            return self.numMessagesReceived;
+        }
+    
+        // Methods
+    
+        fun receivedNewMessage() {          // your new trait may define new contract methods
+            if (self.filterMessage()) {
+                self.numMessagesReceived = self.numMessagesReceived + 1;
+            }
+        }
+    
+        virtual fun filterMessage(): Bool { // virtual functions can be overridden by users of this trait
+            // the default filtering behavior is to ignore messages sent by the owner
+            if (sender() == self.owner) {
+                return false;
+            }
+            return true;
+        }
+    }
+    
+    /////////////////////////////////////////////////////////////////////////////
+    // this Counter contract is going to use our new trait to add analytics to it
+    
+    contract Counter with Deployable, Trackable {
+    
+        owner: Address;                     // The Trackable trait requires this exact state variable
+        numMessagesReceived: Int as uint64; // The Trackable trait requires this exact state variable
+        val: Int as uint32;
+     
+        init() {
+            self.owner = sender(); // we can initialize owner to any value we want, the deployer in this case
+            self.numMessagesReceived = 0;
+            self.val = 0;
+        }
+     
+        receive("increment") {
+            self.receivedNewMessage(); // here we are using our trait
+            self.val = self.val + 1;
+        }
+     
+        get fun value(): Int {
+            return self.val;
+        }
+    
+        // the trait allows us to override the default filtering behavior
+        override fun filterMessage(): Bool {
+            // our contract's custom filtering behavior is to remove all filters and count all messages
+            return true;
+        }
+    
+        // receive("reset stats") is added automatically to allow owner to reset the stats
+        // get fun stats(): Int is added automatically to query the stats
+        // get fun owner(): Address is added automatically to query who the owner is
+    }
+```

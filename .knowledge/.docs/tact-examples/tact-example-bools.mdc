@@ -1,0 +1,55 @@
+---
+description: This describes how Tact handles booleans, emphasizing that Bool is a primitive type used for logical operations and flags. It supports basic logical operators (&&, ||, !) but cannot be used in arithmetic. The storage is highly efficient, requiring only 1-bit per Bool, making it cost-effective for state persistence.
+globs: *.tact
+---
+Bools
+=====
+
+This primitive data type can hold the values `true` or `false`.
+
+`Bool` is convenient for boolean and logical operations. It is also useful for storing flags.
+
+The only supported operations with booleans are `&&` `||` `!` - if you try to add them, for example, the code will not compile.
+
+State costs
+-----------
+
+Persisting bools to state is very space-efficient, they only take 1-bit. **Storing 1000 bools in state [costs](mdc:https:/ton.org/docs/develop/smart-contracts/fees#how-to-calculate-fees) about 0.00072 TON per year.**
+
+```tact
+    import "@stdlib/deploy";
+    
+    contract Bools with Deployable {
+     
+        // contract persistent state variables
+        b1: Bool = true;
+        b2: Bool = false;
+        b3: Bool;
+    
+        init() {
+            self.b3 = !self.b2;
+        }
+    
+        receive("show all") {
+            dump(self.b1);
+            dump(self.b2);
+            dump(self.b3);
+        }
+    
+        receive("show ops") {
+            let b: Bool = true; // temporary variable
+            dump(b);
+    
+            b = self.b1 && self.b2 || !self.b3;
+            dump(b);
+    
+            dump(self.b1 == true);
+            dump(self.b1 == self.b2);
+            dump(self.b1 != self.b2);
+        }
+    
+        get fun result(): Bool {
+            return self.b1;
+        }
+    }
+```

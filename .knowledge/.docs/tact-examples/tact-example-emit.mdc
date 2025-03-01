@@ -1,0 +1,57 @@
+---
+description: Emitting Logs Contracts can generate events to indicate important actions, which can be later analyzed off-chain using the RPC API. Use Cases Logs help track events like transactions, staking, and other state changes efficiently without sending actual messages. Efficiency The emit() function is a gas-efficient way to store events on-chain without requiring message delivery.
+globs: *.tact
+---
+Emitting Logs
+=============
+
+It is sometimes useful to emit events from the contract in order to indicate that certain things happened.
+
+This data can later be analyzed off-chain and indexed by using [RPC API](mdc:https:/orbs.com/ton-access) to query all transactions sent to the contract.
+
+Consider for example a staking contract that wants to indicate how much time passed before users unstaked for analytics purposes. By analyzing this data, the developer can think of improvements to the product.
+
+One way to achieve this is by sending messages back to the sender using `self.reply()` or by sending messages to the zero address. These two methods work, but they are not the most efficient in terms of gas.
+
+The `emit()` function will output a message (binary or textual) from the contract. This message does not actually have a recipient and is very gas-efficient because it doesn't actually need to be delivered.
+
+The messages emitted in this way are still recorded on the blockchain and can be analyzed by anyone at any later time.
+
+```tact
+    import "@stdlib/deploy";
+    
+    message TransferEvent {
+        amount: Int as coins;
+        recipient: Address;
+    }
+    
+    message StakeEvent {
+        amount: Int as coins;
+    }
+    
+    contract Emit with Deployable {
+    
+        init() {}
+    
+        receive("action") {
+            // handle action here
+            // ...
+            // emit log that the action was handled
+            emit("Action handled".asComment());
+        }
+    
+        receive("transfer") {
+            // handle transfer here
+            // ...
+            // emit log that the transfer happened
+            emit(TransferEvent{amount: ton("1.25"), recipient: sender()}.toCell());
+        }
+    
+        receive("stake") {
+            // handle stake here
+            // ...
+            // emit log that stake happened
+            emit(StakeEvent{amount: ton("0.007")}.toCell());
+        }
+    }
+```

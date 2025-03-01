@@ -1,0 +1,58 @@
+---
+description: Throwing Errors Transactions may fail due to contract-defined conditions or runtime errors, causing a revert that undoes all state changes. Error Notification The sender is informed through a bounced message when a transaction is rejected.
+globs: *.tact
+---
+Throwing Errors
+===============
+
+Processing an incoming message in a transaction isn't always successful. The contract may encounter some error and fail.
+
+This can be due to an explicit decision of the contract author, usually by writing a `require()` on a condition that isn't met, or this may happen implicitly due to some computation error in run-time, like a math overflow.
+
+When an error is thrown, the transaction reverts. This means that all persistent state changes that took place during this transaction, even those that happened before the error was thrown, are all reverted and return to their original values.
+
+Notifying the sender about the error
+------------------------------------
+
+How would the sender of the incoming message know that the message they had sent was rejected due to an error?
+
+All communication is via messages, so naturally the sender should receive a message about the error. TON will actually return the original message back to the sender and mark it as _bounced_ - just like a snail mail letter that couldn't be delivered.
+
+```
+    import "@stdlib/deploy";
+    
+    message Divide {
+        by: Int as uint32;
+    }
+    
+    contract Errors with Deployable {
+    
+        val: Int as int64;
+     
+        init() {
+            self.val = 0;
+        }
+     
+        // not meeting the condition will raise an error, revert the transaction and all state changes
+        receive("increment") {
+            self.val = self.val + 1;
+            require(self.val < 5, "Counter is too high");
+        }
+    
+        // any exceptions during execution will also revert the transaction and all state changes
+        receive(msg: Divide) {
+            self.val = 4;
+            self.val = self.val / msg.by;
+        }
+    
+        // advanced: revert the transaction and return a specific non-zero exit code manually
+        // https://ton.org/docs/learn/tvm-instructions/tvm-exit-codes
+        receive("no access") {
+            throw(132);
+        }
+     
+        get fun value(): Int {
+            return self.val;
+        }
+    }
+```

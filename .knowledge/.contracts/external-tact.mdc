@@ -1,0 +1,38 @@
+---
+description: A contract that manages an owner-defined timeout and processes external messages. It allows time-based validation for specific actions and includes a top-up handler without executing additional logic.
+globs: *.tact
+---
+```tact
+import "@stdlib/deploy";
+import "@stdlib/ownable";
+
+message Increment {
+    value: Int;
+}
+
+contract External with Deployable, Ownable {
+    owner: Address;
+    timeout: Int;
+
+    init(owner: Address) {
+        self.owner = owner;
+        self.timeout = now() + 5 * 60; // 5 minutes
+    }
+
+    receive("Topup") {
+        // Do nothing
+    }
+
+    external("Timeout") {
+        if (now() > self.timeout) {
+            acceptMessage();
+        }
+    }
+
+    external(msg: Increment) {
+        if (msg.value == now()) {
+            acceptMessage();
+        }
+    }
+}
+```

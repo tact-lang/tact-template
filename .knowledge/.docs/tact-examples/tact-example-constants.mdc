@@ -1,0 +1,42 @@
+---
+description: This section covers Constants in Tact, which are immutable values computed at compile-time. Unlike variables, constants do not consume state storage since their values are embedded in the code cell. They can be accessed in both receivers and getters but cannot be modified. Constants are useful for fixed values, such as predefined states or system-wide settings.
+globs: *.tact
+---
+Constants
+=========
+
+Unlike variables, constants cannot change. Their values are calculated in _compile-time_ and cannot change during execution.
+
+Constant initializations must be relatively simple and only rely on values known during compilation. If you add two numbers for example, the compiler will calculate the result during build and put the result in your compiled code.
+
+You can read constants both in **_receivers_** and in **_getters_**.
+
+Unlike contract variables, **constants don't consume space in persistent state. Their values are stored directly in the code cell.**
+
+There isn't much difference between constants defined outside of a contract and inside the contract. Those defined outside can be used by other contracts in your project.
+
+```tact
+    import "@stdlib/deploy";
+    
+    // global constants are calculated in compile-time and can't change
+    const GlobalConst1: Int = 1000 + ton("1.24") + pow(10, 9);
+    
+    contract Constants with Deployable {
+    
+        // contract constants are calculated in compile-time and can't change
+        const ContractConst1: Int = 2000 + ton("1.25") + pow(10, 9);
+        
+        // if your contract can be in multiple states, constants are an easy alternative to enums
+        const StateUnpaid: Int = 0;
+        const StatePaid: Int = 1;
+        const StateDelivered: Int = 2;
+        const StateDisputed: Int = 3;
+    
+        init() {}
+    
+        get fun sum(): Int {
+            // you can read the constants anywhere
+            return GlobalConst1 + self.ContractConst1 + self.StatePaid;
+        }
+    }
+```

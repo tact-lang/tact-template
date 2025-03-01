@@ -1,0 +1,59 @@
+---
+description: Calculate Contract Address explains how TON determines contract addresses based on initial code and data (stateInit). Contracts can get their own address using myAddress() and compute the address of another contract using contractAddress(stateInit).
+globs: *.tact
+---
+Calculate Contract Address
+==========================
+
+When a contract is deployed to the chain, it receives an address by which users can refer to it and send it transactions.
+
+In this example, we have two different contracts: `Todo1` and `Todo2`. They are deployed separately and each gets its own unique address. As we've seen before, a contract can always know its own address by running `myAddress()`.
+
+The special bit in this example is that each contract can also get the address of the other contract by running `contractAddress(stateInit)`.
+
+How is the contract address generated?
+--------------------------------------
+
+Contract addresses on TON are [derived](mdc:https:/docs.ton.org/learn/overviews/addresses#account-id) from the initial code of the contract (the compiled bytecode) and the initial data of the contract (the arguments of init).
+
+Both contracts don't have any constructor arguments, so their initial data is the identical. Their addresses are different because their code is different.
+
+The combination of the inital code and the initial data is called the _stateInit_ of the contract. Tact gives easy access to the _stateInit_ using the `initOf` statement.
+
+```tact
+    import "@stdlib/deploy";
+    
+    // first contract
+    contract Todo1 with Deployable {
+    
+        seqno: Int as uint64 = 1; // the code specifies the index (sequence number)
+    
+        init() {}
+    
+        get fun myAddress(): Address {
+            return myAddress();
+        }
+    
+        get fun otherAddress(): Address {
+            let init: StateInit = initOf Todo2();
+            return contractAddress(init);
+        }
+    }
+    
+    // second contract
+    contract Todo2 with Deployable {
+    
+        seqno: Int as uint64 = 2; // the code specifies the index (sequence number)
+    
+        init() {}
+    
+        get fun myAddress(): Address {
+            return myAddress();
+        }
+    
+        get fun otherAddress(): Address {
+            let init: StateInit = initOf Todo1();
+            return contractAddress(init);
+        }
+    }
+```

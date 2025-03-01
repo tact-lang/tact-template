@@ -1,0 +1,70 @@
+---
+description: This explains how Tact ensures safe integer operations by using 257-bit signed integers at runtime, preventing overflow errors by throwing exceptions if limits are exceeded. It also details how decimal values are represented using integer scaling, such as cents for dollars or nano-tons for TON (where 1.25 TON is stored as 1,250,000,000). This approach maintains precision without using floating-point arithmetic.
+globs: *.tact
+---
+Integer Operations
+==================
+
+Since all runtime calculations with integers are done at 257-bit, overflows are quite rare. An overflow can happen if the result of a math operation is too big to fit.
+
+**For example, multiplying 2^256 by 2^256 will not fit within 257-bit.**
+
+Nevertheless, if any math operation overflows, an exception will be thrown, and the transaction will fail. You could say that Tact's math is safe by default.
+
+There is no problem with mixing variables of different state sizes in the same calculation. At runtime, they are all the same type—**always 257-bit signed**. This is the largest supported integer type, so they all fit.
+
+Decimal Point with Integers
+---------------------------
+
+Arithmetic with dollars, for example, requires two decimal places. How can we represent the number `1.25` if we are only able to work with integers? The solution is to work with _cents_. In this way, `1.25` becomes `125`. We simply remember that the two rightmost digits represent the numbers after the decimal point.
+
+Similarly, working with TON coins requires nine decimal places instead of two. Therefore, the amount of 1.25 TON, which can be represented in Tact as `ton("1.25")`, is actually the number `1250000000`.
+
+**We refer to these as _nano-tons_ rather than cents.**
+
+```tact
+    import "@stdlib/deploy";
+    
+    contract Integers with Deployable {
+     
+        // contract persistent state variables
+        i1: Int as uint128 = 3001;
+        i2: Int as int32 = 57;
+    
+        init() {}
+    
+        receive("show ops") {
+            let i: Int = -12; // temporary variable, runtime Int type is always int257 (range -2^256 to 2^256 - 1)
+            dump(i);
+    
+            i = self.i1 * 3 + (self.i2 - i);    // basic math expressions
+            dump(i);
+    
+            i = self.i1 % 10;                   // modulo (remainder after division), 3001 % 10 = 1
+            dump(i);
+            
+            i = self.i1 / 1000;                 // integer division (truncation toward zero), 3001 / 1000 = 3
+            dump(i);
+            
+            i = self.i1 >> 3;                   // shift right (divide by 2^n)
+            dump(i);
+            
+            i = self.i1 << 2;                   // shift left (multiply by 2^n)
+            dump(i);
+            
+            i = min(self.i2, 11);               // minimum between two numbers
+            dump(i);
+            
+            i = max(self.i2, 66);               // maximum between two numbers
+            dump(i);
+            
+            i = abs(-1 * self.i2);              // absolute value
+            dump(i);
+    
+            dump(self.i1 == 3001);
+            dump(self.i1 > 2000);
+            dump(self.i1 >= 3002);
+            dump(self.i1 != 70);
+        }
+    }
+```

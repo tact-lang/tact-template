@@ -1,0 +1,74 @@
+---
+description: Structs in Tact allow grouping multiple primitive types into complex data types for better readability. They can be nested, have default values, and include optional fields. Structs can be used in persistent storage, messages, and getter return values, enabling multiple outputs from a single function. Unlike messages, structs lack a 32-bit header, making them unsuitable for receive() handlers.
+globs: *.tact
+---
+Structs
+=======
+
+Structs allow you to combine multiple primitives together in a more semantic way. They're a great tool to make your code more readable.
+
+Structs can define complex data types that contain multiple fields of different types. They can also be nested.
+
+Structs can also include both default fields and optional fields. This can be quite useful when you have many fields but don't want to keep respecifying them.
+
+Structs are also useful as return values from _getters_ or other internal functions. They effectively allow a single getter to return multiple return values.
+
+The order of fields does not matter. Unlike other languages, Tact does not have any padding between fields.
+
+**Info**: You can check more "Optionals" examples here: [Optionals](mdc:04-optionals)
+
+Structs vs. messages
+--------------------
+
+Structs and messages are almost identical with the only difference that messages have a 32-bit header containing their unique numeric id. This allows messages to be used with receivers since the contract can tell different types of messages apart based on this id.
+
+```tact
+    import "@stdlib/deploy";
+    
+    struct Point {
+        x: Int as int64;
+        y: Int as int64;
+    }
+    
+    struct Params {
+        name: String = "Satoshi";   // default value
+        age: Int? = null;           // optional field
+        point: Point;               // nested structs
+    }
+    
+    message Add {
+        point: Point;               // message can hold a struct
+    }
+    
+    contract Structs with Deployable {
+    
+        // contract persistent state variables
+        s1: Point;
+        s2: Params;
+    
+        init() {
+            self.s1 = Point{x: 2, y: 3};
+            self.s2 = Params{point: self.s1};
+        }
+    
+        receive("show ops") {
+            // temporary variable
+            let s: Point = Point{x: 4, y: 5};
+    
+            self.s1 = s;
+        }
+    
+        receive(msg: Add) {
+            self.s1.x = self.s1.x + msg.point.x;
+            self.s1.y = self.s1.y + msg.point.y;
+        }
+    
+        get fun point(): Point {
+            return self.s1;
+        }
+    
+        get fun params(): Params {
+            return self.s2;
+        }
+    }
+```

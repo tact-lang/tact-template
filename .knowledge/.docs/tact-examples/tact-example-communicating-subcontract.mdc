@@ -1,0 +1,78 @@
+---
+description: Communicating with Children describes how a parent contract can send messages to its child contracts and receive responses. The parent communicates with multiple children dynamically, ensuring lazy deployment by including stateInit in every message. This guarantees that undeployed children are automatically deployed when first contacted.
+globs: *.tact
+---
+Communicating with Children
+===========================
+
+In a parent-child relationship, the user would normally just deploy the parent. This is what's happening here when you press the Deploy button.
+
+In this example, the user is only supposed to communicate with the parent. You can send the parent contract a message by pressing the Send greet 3 button.
+
+This message will instruct the parent to send its own `HiFromParent` message to the first 3 children. Every child will respond to the greeting by sending the parent its own `HiFromChild` back.
+
+How can parent know if a child is deployed?
+-------------------------------------------
+
+You can't send a message to a contract until it is deployed. How can the parent guarantee that they're not communicating with a child that wasn't deployed yet?
+
+The best practice is to include the _stateInit_ on every message. This way, if the child isn't deployed, it will be. If the child is already deployed, this field will be ignored.
+
+This is called lazy deployment.
+
+```tact
+    import "@stdlib/deploy";
+    
+    message HiFromParent {
+        greeting: String;
+    }
+    
+    message HiFromChild {
+        fromSeqno: Int as uint64;
+        greeting: String;
+    }
+    
+    // we have multiple instances of the children
+    contract TodoChild {
+    
+        seqno: Int as uint64;
+     
+        // when deploying an instance, we must specify its index (sequence number)
+        init(seqno: Int) {
+            self.seqno = seqno;
+        }
+    
+        receive(msg: HiFromParent) {
+            dump(self.seqno);
+            dump("😃 handling hi from parent");
+            self.reply(HiFromChild{fromSeqno: self.seqno, greeting: "sup"}.toCell());
+        }
+    }
+    
+    // we have one instance of the parent
+    contract TodoParent with Deployable {
+     
+        init() {}
+    
+        receive("greet 3") {
+            let i: Int = 0;
+            repeat (3) {
+                i = i + 1;
+                let init: StateInit = initOf TodoChild(i);
+                send(SendParameters{
+                    to: contractAddress(init),
+                    body: HiFromParent{greeting: "darling"}.toCell(),
+                    value: ton("0.1"),              // pay for message and potential deployment
+                    mode: SendIgnoreErrors,
+                    code: init.code,                // if child is not deployed, also deploy it
+                    data: init.data
+                });
+            }
+        }
+    
+        receive(msg: HiFromChild) {
+            dump("😑 handling hi from child");
+            dump(msg.fromSeqno);
+        }
+    }
+```

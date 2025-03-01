@@ -1,0 +1,49 @@
+---
+description: If Statements Tact supports if statements with mandatory curly braces for structuring conditional logic. Boolean Expressions Any valid boolean expression can be used as a condition. No Switch Instead of switch, use else if for handling multiple outcomes.
+globs: *.tact
+---
+If Statements
+=============
+
+Tact supports if statements in a similar syntax to most programming languages that you're used to. Curly braces are required though, so you can't leave them out.
+
+The condition of the statement can be any boolean expression.
+
+There is no `switch` statement in Tact. If you need to need to handle a group of outcomes separately, follow the `else if` pattern you can see in the third example.
+
+```tact
+    import "@stdlib/deploy";
+    
+    contract IfStatements with Deployable {
+    
+        val: Int as int32;
+    
+        init() {
+            self.val = 17;
+        }
+    
+        receive("check1") {
+            if (self.val > 10) {
+                dump("larger than 10");
+            }
+        }
+    
+        receive("check2")  {
+            if (self.val > 100) {
+                dump("larger than 100");
+            } else {
+                dump("smaller than 100");
+            }
+        }
+    
+        receive("check3") {
+            if (self.val > 1000) {
+                dump("larger than 1000");
+            } else if (self.val > 500) {
+                dump("between 500 and 1000");
+            } else {
+                dump("smaller than 500");
+            }
+        }
+    }
+```

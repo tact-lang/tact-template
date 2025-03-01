@@ -1,0 +1,29 @@
+---
+description: This demonstrates how to natively call a Func function from a Tact contract. The native keyword binds a low-level Func function to be used within Tact, enabling direct interaction with optimized blockchain logic. This approach allows leveraging existing Func code while maintaining Tact's high-level structure.
+globs: *.tact
+---
+```func
+int hello_world() {
+    return 1000;
+}
+```
+
+```tact
+import "./native.fc";
+
+@name(hello_world)
+native helloWorld(): Int;
+
+contract Native {
+    
+    value: Int;
+
+    init() {
+        self.value = 0;
+    }
+
+    receive("Increment") {
+        self.value = self.value + helloWorld();
+    }
+}
+```

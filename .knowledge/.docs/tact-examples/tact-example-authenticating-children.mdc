@@ -1,0 +1,90 @@
+---
+description: Authenticating Children ensures that only legitimate parent-child messages are processed. It prevents unauthorized users from impersonating children or parents by adding require() checks to verify the sender’s address. This strengthens security by ensuring only real children and the real parent can communicate.
+globs: *.tact
+---
+Authenticating Children
+=======================
+
+If you look closely at the previous example you will notice that it is somewhat dangerous.
+
+What happens if some user tries to send a `HiFromChild` message and impersonate a child? What happens if some user tries to send a `HiFromParent` message and impersonate the parent?
+
+To add authentication that messages came from where we think they came from, we simply need to add `require()` in the beginning of every protected receiver and make sure that the sender is who we expect it is.
+
+It is best practice to add this authentication to every message coming from a parent and every message coming from a child.
+
+Let's try to hack this contract
+-------------------------------
+
+Try pressing the Send HiFromChild{1} button. This will send the parent an impersonated `HiFromChild` message, but from some user, not from a real child.
+
+Since this code is now protected, it will notice that the sender is incorrect and reject the message with an access denied error.
+
+**Info**: Having a error break in the \`Send HiFromChild{1}\` button is expected. Because only the message from the child can be accepted.
+
+```tact
+    import "@stdlib/deploy";
+    
+    message HiFromParent {
+        greeting: String;
+    }
+    
+    message HiFromChild {
+        fromSeqno: Int as uint64;
+        greeting: String;
+    }
+    
+    // we have multiple instances of the children
+    contract TodoChild {
+    
+        parent: Address; // we added this variable so a child always knows who the parent is
+        seqno: Int as uint64;
+     
+        // when deploying an instance, we must specify its index (sequence number)
+        init(parent: Address, seqno: Int) {
+            require(sender() == parent, "not the parent");
+            self.parent = parent;
+            self.seqno = seqno;
+        }
+    
+        receive(msg: HiFromParent) {
+            require(sender() == self.parent, "Access denied");  // only the real parent can get here
+           
+            dump(self.seqno);
+            dump("😃 handling hi from parent");
+            self.reply(HiFromChild{fromSeqno: self.seqno, greeting: "sup"}.toCell());
+        }
+    }
+    
+    // we have one instance of the parent
+    contract TodoParent with Deployable {
+     
+        init() {}
+    
+        receive("greet 3") {
+            let i: Int = 0;
+            repeat (3) {
+                i = i + 1;
+                let init: StateInit = initOf TodoChild(myAddress(), i);
+                send(SendParameters{
+                    to: contractAddress(init),
+                    body: HiFromParent{ greeting: "darling" }.toCell(),
+                    value: ton("0.1"),              // pay for message and potential deployment
+                    mode: SendIgnoreErrors,
+                    code: init.code,                // if child is not deployed, also deploy it
+                    data: init.data
+                });
+            }
+        }
+    
+        receive(msg: HiFromChild) {
+            let expectedAddress: Address = contractAddress(initOf TodoChild(myAddress(), msg.fromSeqno));
+            
+            require(sender() == expectedAddress, "Access denied");
+            // only the real children can get here
+            
+            dump(msg.fromSeqno);
+            dump("😑 handling hi from child");
+        }
+    }
+```

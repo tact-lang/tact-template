@@ -1,0 +1,120 @@
+---
+description: Unbounded maps on blockchain can become inefficient as state size grows, increasing gas costs and potentially exceeding transaction limits. To enable scalability, data must be sharded across multiple contracts using a parent-child structure. In this model, each balance is stored in a separate child contract. Transfers trigger the deployment of new child contracts as needed, ensuring efficient token distribution while minimizing gas costs.
+globs: *.tact
+---
+Unbounded Maps - Simplified Token
+=================================
+
+In general, inifinite data structures that can actually grow to billions of elements are very difficult to implement on blockchain. As the contract persistent state grows in size, read and write operations become more expensive in gas. In the extreme, they may cost more than a transaction gas limit, rendering the contract unusable.
+
+**It is therefore important to design contracts to have an upper bound on state size.** If so, how would we implement a token with a map of balances that can scale to billions of holders?
+
+Infinitely scalable balance map
+-------------------------------
+
+The secret of infinite scalability on TON is sharding the data across multiple contracts. We can apply the parent-child design pattern to do just this.
+
+In this example, we hold the balance of every holder in a separate child contract.
+
+To transfer tokens, the owner sends the `Transfer` message to the child contract holding their own balance. This will cause the child to deploy its sibling - the child contract holding the recipient's balance - by sending it the `InternalAddTokens` message.
+
+This example also handles gas efficiently. The excess gas from every operation is refunded to the original sender.
+
+```tact
+    import "@stdlib/deploy";
+    
+    struct Metadata {
+        symbol: String;
+        totalSupply: Int;
+    }
+    
+    message Transfer {
+        amount: Int as coins;
+        to: Address;
+    }
+    
+    // the token parent, mostly used to query general metadata and get children addresses
+    contract TokenParent with Deployable {
+     
+        symbol: String;
+        totalSupply: Int as coins;
+    
+        init() {
+            self.symbol = "SHIB";
+            self.totalSupply = 500 * pow(10,9);
+            self.mint(self.totalSupply, sender()); // mint the entire total supply to deployer
+        }
+    
+        fun mint(amount: Int, to: Address) {
+            let init: StateInit = initOf TokenChild(myAddress(), to);
+            send(SendParameters{
+                to: contractAddress(init),
+                body: InternalAddTokens{amount: amount, origin: myAddress()}.toCell(),
+                value: ton("0.03"),             // pay for the deployment and leave some TON in the child for storage
+                mode: SendIgnoreErrors,
+                code: init.code,                // deploy the child if needed
+                data: init.data
+            });
+        }
+    
+        get fun metadata(): Metadata {
+            return Metadata{symbol: self.symbol, totalSupply: self.totalSupply};
+        }
+    
+        get fun childAddress(owner: Address): Address {
+            return contractAddress(initOf TokenChild(myAddress(), owner));
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // child contract - the Transfer message is sent by users directly to a child
+    
+    message InternalAddTokens {
+        amount: Int as coins;
+        origin: Address;
+    }
+    
+    contract TokenChild {
+    
+        parent: Address;
+        owner: Address;         // every child holds the balance of a different owner
+        balance: Int as coins;  // this is the balance of the owner
+     
+        init(parent: Address, owner: Address) {
+            self.parent = parent;
+            self.owner = owner;
+            self.balance = 0;
+        }
+    
+        // sent by users to initiate a new transfer
+        receive(msg: Transfer) {
+            require(sender() == self.owner, "Access denied");
+            require(self.balance >= msg.amount, "Insufficient balance");
+            self.balance = self.balance - msg.amount;
+            let init: StateInit = initOf TokenChild(self.parent, msg.to);
+            send(SendParameters{
+                to: contractAddress(init),
+                body: InternalAddTokens{amount: msg.amount, origin: self.owner}.toCell(),
+                value: ton("0.03"),             // pay for the deployment and leave some TON in the child for storage
+                mode: SendIgnoreErrors,
+                code: init.code,                // deploy the child if needed
+                data: init.data
+            });
+            self.reply("transferred".asComment());
+        }
+    
+        // internal message sent by one child to another to update balances
+        receive(msg: InternalAddTokens) {
+            if (msg.origin == self.parent) { // tokens originate in a mint
+                require(sender() == self.parent, "Parent only");
+            } else { // tokens originate in a Transfer
+                require(sender() == contractAddress(initOf TokenChild(self.parent, msg.origin)), "Sibling only");
+            }
+            self.balance = self.balance + msg.amount;
+        }
+    
+         get fun balance(): Int {
+            return self.balance;
+        }
+    }
+```

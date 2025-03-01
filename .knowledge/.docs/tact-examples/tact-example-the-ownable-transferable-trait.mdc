@@ -1,0 +1,57 @@
+---
+description: The Ownable-Transferable Trait extends Ownable by allowing ownership transfer via ChangeOwner{newOwner: Address}. This enables decentralization by eventually renouncing ownership to a zero address. It should be preferred for dapps to allow future autonomy.
+globs: *.tact
+---
+The Ownable-Transferable Trait
+==============================
+
+The Ownable-Transferable trait is almost identical to the Ownable trait that we covered in the previous example.
+
+It adds one important feature which is the ability for the owner to transfer ownership to a new owner. This can also be used to renounce ownership completely by transferring ownership to an unusable address like the zero address.
+
+If you're building a dapp and aiming for decentralization, always prefer this trait over Ownable. At some point in the dapps future, when you consider the owner role no longer unnecessary, you will be able to renounce ownership and make the dapp fully decentralized.
+
+How to use OwnableTransferable
+------------------------------
+
+Use it in a contract just like Ownable. Define a state variable named `owner: Address` and call `self.requireOwner()` in priviliged receivers.
+
+Your contract will automatically handle the `ChangeOwner{newOwner: Address}` message which allows the owner to transfer ownership.
+
+**Info**: The OwnableTransferable trait is defined in the [standard library](mdc:https:/github.com/tact-lang/tact/blob/main/stdlib/libs/ownable.tact)
+
+```tact
+    // this trait has to be imported
+    import "@stdlib/ownable";
+    import "@stdlib/deploy";
+    
+    // the OwnableTransferable trait can limit certain actions to the owner only
+    contract Counter with Deployable, OwnableTransferable {
+    
+        owner: Address; // The OwnableTransferable trait requires you to add this exact state variable
+        val: Int as uint32;
+     
+        init() {
+            self.owner = sender(); // we can initialize owner to any value we want, the deployer in this case
+            self.val = 0;
+        }
+     
+        // this message is available to anyone
+        receive("increment") {
+            self.val = self.val + 1;
+        }
+    
+        // this message in only available to the owner
+        receive("double") {
+            self.requireOwner();
+            self.val = self.val * 2;
+        }
+     
+        get fun value(): Int {
+            return self.val;
+        }
+    
+        // receive(msg: ChangeOwner) is added automatically to transfer ownership
+        // get fun owner(): Address is added automatically to query who the owner is
+    }
+```
