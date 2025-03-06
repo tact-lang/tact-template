@@ -1,0 +1,66 @@
+---
+description: Functions Tact supports global static functions, which can be called from anywhere but cannot access contract state, and contract methods, which can access state variables and be used within the contract. Return Values Functions return a single value, but multiple values can be returned using structs. Access Control Functions can enforce conditions like only allowing the deployer to execute them.
+globs: *.tact
+---
+Functions
+=========
+
+To make your code more readable and promote code reuse, you're encouraged to divide it into functions.
+
+Functions in Tact start with the `fun` keyword. Functions can receive multiple input arguments and can optionally return a single output value. You can return a `struct` if you want to return multiple values.
+
+Global static functions are defined outside the scope of contracts. You can call them from anywhere, but they can't access the contract or any of the contract state variables.
+
+Contract methods are functions that are defined inside the scope of a contract. You can call them only from other contract methods like _receivers_ and _getters_. They can access the contract's state variables.
+
+```tact
+    import "@stdlib/deploy";
+    
+    struct TokenInfo {
+        ticker: String;
+        decimals: Int as uint8;
+    }
+    
+    // this is a global static function that can be called from anywhere
+    fun average(a: Int, b: Int): Int {
+        return (a + b) / 2;
+    }
+    
+    contract Functions with Deployable {
+    
+        deployer: Address;
+    
+        init() {
+            self.deployer = sender();
+        }
+    
+        // this contract method can be called from within this contract and access its variables
+        fun onlyDeployer() {
+            require(sender() == self.deployer, "Only the deployer is permitted here");
+        }
+    
+        receive("priviliged") {
+            self.onlyDeployer();
+        }
+    
+        // this contract method returns multiple return values using a struct
+        fun getInfo(index: Int): TokenInfo {
+            if (index == 1) {
+                return TokenInfo{ticker: "TON", decimals: 9};
+            }
+            if (index == 2) {
+                return TokenInfo{ticker: "ETH", decimals: 18};
+            }
+            return TokenInfo{ticker: "unknown", decimals: 0};
+        }
+    
+        receive("best L1") {
+            let best: TokenInfo = self.getInfo(1);
+            self.reply(best.ticker.asComment());
+        }
+    
+        get fun result(): Int {
+            return average(1, 10);
+        }
+    }
+```

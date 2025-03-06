@@ -1,0 +1,452 @@
+---
+description: This is a Jetton implementation in Tact, enabling minting, transfers, and burning of tokens. The contracts include a minter, wallet, and messaging for interactions. It supports error handling, gas management, and compliance with TON standards.
+globs: *.tact
+---
+Readme - [jetton-readme.mdc](mdc:.cursor/rules/jetton-readme.mdc)
+Deploy - [jetton-deploy-ts.mdc](mdc:.cursor/rules/jetton-deploy-ts.mdc)
+Test - [jetton-test-ts.mdc](mdc:.cursor/rules/jetton-test-ts.mdc)
+
+sources/constants.tact
+```tact
+trait MinterExitcodes {
+    const IncorrectSender: Int = 73;
+    const UnauthorizedBurn: Int = 74;
+    const InsufficientGasForDiscovery: Int = 75;
+}
+
+trait WalletExitcodes {
+    const IncorrectSender: Int = 705;
+    const IncorrectBalanceAfrerSend: Int = 706;
+    const IncorrectSenderInternal: Int = 707; // Yeah, two same exit codes are used for different purposes
+    //IncorrectSenderInternal - https://github.com/ton-blockchain/token-contract/blob/main/ft/jetton-wallet.fc#L117
+    const UnsufficientAmountOfTonForBurn: Int = 707;
+    //UsufficientAmountOfTonForBurn - https://github.com/ton-blockchain/token-contract/blob/main/ft/jetton-wallet.fc#L175
+    const UnsufficientAmountOfTonAttached: Int = 709;
+    const InvalidDestinationWorkchain: Int = 333;
+}
+
+trait GasConstants {
+    const gasForBurn: Int = ton("0.011408799");
+    const gasForDiscovery: Int = ton("0.0067056");
+}
+```
+
+sources/jetton_minter_discoverable.tact
+```tact
+import "@stdlib/ownable";
+import "@stdlib/deploy";
+import "./jetton_wallet";
+import "./constants";
+import "./messages";
+
+asm fun emptyAddress(): Address { b{00} PUSHSLICE }
+
+struct JettonMasterState {
+    totalSupply: Int as coins;
+    mintable: Bool;
+    adminAddress: Address;
+    jettonContent: Cell;
+    jettonWalletCode: Cell;
+}
+
+//Actually this contract has OwnableTransferable functionality
+//but this logic is implemented without OwnableTransferable trait
+//to match refference implementation in terms of exit codes.
+contract JettonMinter with MinterExitcodes, GasConstants {
+    totalSupply: Int as coins;
+    mintable: Bool;
+    owner: Address;
+    jettonContent: Cell;
+
+    init(owner: Address, jettonContent: Cell) {
+        self.totalSupply = 0;
+        self.mintable = true;
+        self.owner = owner;
+        self.jettonContent = jettonContent;
+    }
+
+    receive(msg: TokenBurnNotification) {
+        //Check that the message is from msg.sender's jetton_wallet
+        nativeThrowUnless(self.UnauthorizedBurn, sender() == self.getJettonWalletByOwner(msg.sender));
+
+        self.totalSupply -= msg.amount;
+        send(SendParameters{
+            to: msg.response_destination,
+            value: 0,
+            bounce: false,
+            mode: SendRemainingValue | SendIgnoreErrors, //ignore errors, because supply already been updated
+            body: TokenExcesses{
+                query_id: msg.query_id
+            }.toCell()
+        });
+    }
+    receive(msg: CustomChangeOwner) {
+        // Check if the sender is the owner
+        nativeThrowUnless(self.IncorrectSender, sender() == self.owner);
+
+        // Update owner
+        self.owner = msg.newOwner;
+    }
+
+    receive(msg: TokenUpdateContent) {
+        //Only owner may update content.
+        nativeThrowUnless(self.IncorrectSender, sender() == self.owner);
+        self.jettonContent = msg.content; // Update content
+    }
+
+    // https://github.com/ton-blockchain/TEPs/blob/master/text/0089-jetton-wallet-discovery.md
+    receive(msg: ProvideWalletAddress) {
+        nativeThrowUnless(self.InsufficientGasForDiscovery, context().value >= self.gasForDiscovery);
+        let includedAddress: Address? = null;
+        let workchain: Int = parseStdAddress(msg.owner_address.asSlice()).workchain;
+        //Note, that emptyAddress != null, it is different values.
+        //We do like that according to TEP above
+        let targetJettonWallet: Address = emptyAddress();
+
+        if(workchain == 0) {
+            //Only in this case (address is from basechain) we can calculate the address
+            targetJettonWallet = contractAddress(initOf JettonWallet(msg.owner_address, myAddress()));
+        }
+        if (msg.include_address) {
+            includedAddress = msg.owner_address;
+        }
+        send(SendParameters{
+            to: sender(),
+            value: 0,
+            mode: SendRemainingValue,
+            body: self.takeWalletBody(targetJettonWallet, includedAddress, msg.query_id)
+        });
+    }
+    receive(msg: Mint) {
+        nativeThrowUnless(self.IncorrectSender, sender() == self.owner); // Allow minting only by owner
+
+        //We don't use nativeThrowUnless here as 'mintable' flag is implementation-defined
+        //And not present in token-contract https://github.com/ton-blockchain/token-contract/tree/main/ft
+        require(self.mintable, "Not mintable");
+
+        //Maybe we should check that msg.value is enough to cover the gas fees
+        //But there is no such check in token-contract,
+        self.totalSupply += msg.amount; // Update total supply
+
+        let winit: StateInit = self.getJettonWalletInit(msg.receiver);
+
+        send(SendParameters{
+            to: contractAddress(winit),
+            value: 0,
+            bounce: true,
+            mode: SendRemainingValue,
+            body: TokenTransferInternal{
+                query_id: msg.query_id,
+                amount: msg.amount,
+                from: myAddress(),
+                response_destination: self.owner, // Owner is minting, so send excess to owner
+                forward_ton_amount: 1, // 1 nanoton is enough to send a notification
+                forward_payload: emptySlice()
+            }.toCell(),
+        code: winit.code,
+        data: winit.data
+        });
+    }
+
+    bounced(msg: bounced<TokenTransferInternal>){
+        self.totalSupply -= msg.amount;
+    }
+
+    //https://github.com/ton-blockchain/TEPs/blob/master/text/0089-jetton-wallet-discovery.md#scheme
+    //take_wallet_address#d1735400 query_id:uint64 wallet_address:MsgAddress owner_address:(Maybe ^MsgAddress) = InternalMsgBody;
+    inline fun takeWalletBody(targetJettonWallet: Address, includedAddress: Address?, query_id: Int): Cell {
+        let body: Builder = beginCell()
+        .storeUint(0xd1735400, 32) // takeWalletBody opcode
+        .storeUint(query_id, 64)
+        .storeSlice(targetJettonWallet.asSlice());
+        if (includedAddress != null) {
+            let includedAddressCell: Cell = beginCell().storeSlice(includedAddress!!.asSlice()).endCell();
+            body = body.storeBit(true); // Maybe bit
+            body = body.storeRef(includedAddressCell);
+        } else {
+            body = body.storeBit(false); // Maybe bit
+        }
+        return body.endCell();
+    }
+
+    inline fun getJettonWalletByOwner(jetton_wallet_owner: Address): Address {
+        let jwInit: StateInit = self.getJettonWalletInit(jetton_wallet_owner);
+        return contractAddress(jwInit);
+    }
+
+    inline fun getJettonWalletInit(address: Address): StateInit {
+        return initOf JettonWallet(address, myAddress());
+    }
+
+    get fun get_jetton_data(): JettonMasterState {
+        return JettonMasterState {
+            totalSupply: self.totalSupply,
+            mintable: self.mintable,
+            adminAddress: self.owner,
+            jettonContent: self.jettonContent,
+                                                //Owner may be any address, what matters here is the code, not data.
+            jettonWalletCode: initOf JettonWallet(myAddress(), myAddress()).code
+        }
+    }
+    get fun get_wallet_address(ownerAddress: Address): Address {
+        return self.getJettonWalletByOwner(ownerAddress);
+    }
+    get fun owner(): Address {
+        return self.owner;
+    }
+}
+```
+
+sources/jetton_wallet.tact
+```tact
+import "./messages";
+import "./constants";
+
+asm fun myCode(): Cell { MYCODE }
+
+//This contract also has Ownable functionality, but it is implemented without Ownable trait
+//to match refference implementation in terms of exit codes.
+contract JettonWallet with WalletExitcodes, GasConstants {
+    balance: Int as coins;
+    owner: Address;
+    master: Address;
+    const minTonsForStorage: Int = ton("0.015"); // 0.01 TON in original funC implementation. Increased as we have approx. x2 code size
+    const gasConsumption: Int = ton("0.015"); // 0.015 TON in original funC implementation.
+    // According to tests, 23k gas is maximum gas consuption in transfer. 23k gas is 0.0092 TON
+    // More precisely, max gas I could get is 22725
+    init(owner: Address, master: Address) {
+        self.balance = 0;
+        self.owner = owner;
+        self.master = master;
+    }
+
+
+    receive(msg: TokenTransfer) {
+        nativeThrowUnless(self.IncorrectSender, sender() == self.owner);
+
+        let totalFees: Int = (2 * context().readForwardFee() + 2 * self.gasConsumption) + self.minTonsForStorage + msg.forward_ton_amount;
+
+        //Context() returns Structure with info about incoming message
+        nativeThrowUnless(self.UnsufficientAmountOfTonAttached, context().value > totalFees);
+
+        self.balance -= msg.amount;
+
+        //coins type is unsigned type, so
+        //self.balance is unsigned when storing and loading (msg.amount is unsigned too),
+        //however when doing calculations it's value may be negative, so the check is correct
+        nativeThrowUnless(self.IncorrectBalanceAfrerSend, self.balance >= 0);
+
+
+        //We shouldn't send transfers to masterchain due to higher gas price
+        nativeThrowUnless(self.InvalidDestinationWorkchain, parseStdAddress(msg.destination.asSlice()).workchain == 0);
+
+        let init: StateInit = initOf JettonWallet(msg.destination, self.master);
+        let wallet_address: Address = contractAddress(init);
+
+        send(SendParameters{
+            to: wallet_address,
+            value: 0,
+            mode: SendRemainingValue,
+            bounce: true,
+            body: TokenTransferInternal {
+            query_id: msg.query_id,
+                amount: msg.amount,
+                from: self.owner,
+                response_destination: msg.response_destination,
+                forward_ton_amount: msg.forward_ton_amount,
+                forward_payload: msg.forward_payload
+            }.toCell(),
+            code: init.code,
+            data: init.data
+        });
+    }
+
+    receive(msg: TokenTransferInternal) {
+        // This message should come only from master, or from other JettonWallet
+        if (sender() != self.master) {
+            let init: StateInit = initOf JettonWallet(msg.from, self.master);
+            nativeThrowUnless(self.IncorrectSenderInternal, contractAddress(init) == sender());
+        }
+        // Update balance
+        self.balance += msg.amount;
+
+        //Commented require() here because self.balance and msg.amount are coins, so they are unsigned
+        //require(self.balance >= 0, "Invalid balance");
+        // Get value for gas
+
+        let ctx: Context = context(); //Context of current message
+        let msgValue: Int = ctx.value;
+        let tonBalanceBeforeMsg = myBalance() - msgValue;
+        let storageFee = self.minTonsForStorage - min(tonBalanceBeforeMsg, self.minTonsForStorage);
+        msgValue -= (storageFee + self.gasConsumption);
+
+        let fwd_fee: Int = ctx.readForwardFee();
+
+
+        if (msg.forward_ton_amount > 0) {
+            msgValue = ((msgValue - msg.forward_ton_amount) - fwd_fee);
+            send(SendParameters{
+                to: self.owner,
+                value: msg.forward_ton_amount,
+                mode: SendPayGasSeparately,
+                bounce: false,
+                body: TokenNotification{ // 0x7362d09c -- Remind the new Owner
+                    query_id: msg.query_id,
+                    amount: msg.amount,
+                    from: msg.from,
+                    forward_payload: msg.forward_payload
+            }.toCell()
+            });
+        }
+        // 0xd53276db -- Cashback to the original Sender
+        if (msg.response_destination != null && msgValue > 0) {
+            send(SendParameters{
+                to: msg.response_destination!!,
+                value: msgValue,
+                mode: SendIgnoreErrors, // Jetton transfer is already succeeded
+                //In official funC implementation it is SendIgnoreErrors
+                bounce: false,
+                body: TokenExcesses{
+                    query_id: msg.query_id
+                }.toCell()
+            });
+        }
+    }
+
+    receive(msg: TokenBurn) {
+        nativeThrowUnless(self.IncorrectSender, sender() == self.owner);
+
+        let ctx: Context = context();
+        self.balance -= msg.amount; // Update balance
+        nativeThrowUnless(self.IncorrectBalanceAfrerSend, self.balance >= 0);
+
+        // This is minimal possible amount of TONs for attached.
+        nativeThrowUnless(self.UnsufficientAmountOfTonForBurn, ctx.value > self.gasForBurn);
+        // Burn tokens
+        send(SendParameters{
+            to: self.master,
+            value: 0,
+            mode: SendRemainingValue,
+            bounce: true,
+            body: TokenBurnNotification{
+                query_id: msg.query_id,
+                amount: msg.amount,
+                sender: self.owner,
+                response_destination: msg.response_destination
+            }.toCell()
+        });
+    }
+
+    bounced(msg: bounced<TokenTransferInternal>){
+        self.balance += msg.amount;
+    }
+
+    bounced(msg: bounced<TokenBurnNotification>){
+        self.balance += msg.amount;
+    }
+
+    get fun get_wallet_data(): JettonWalletData {
+        return JettonWalletData{
+            balance: self.balance,
+            owner: self.owner,
+            master: self.master,
+            code: myCode() //may be replaced with "initOf JettonDefaultWallet(self.owner, self.master).code"
+        };
+    }
+}
+```
+
+sources/messages.tact
+```tact
+struct JettonData {
+    total_supply: Int;
+    mintable: Bool;
+    owner: Address;
+    content: Cell;
+    wallet_code: Cell;
+}
+
+struct JettonWalletData {
+    balance: Int;
+    owner: Address;
+    master: Address;
+    code: Cell;
+}
+
+struct MaybeAddress {
+    address: Address?;
+}
+
+message(3) CustomChangeOwner { // https://github.com/ton-blockchain/token-contract/blob/main/ft/jetton-minter-discoverable.fc#L126
+    queryId: Int as uint64;
+    newOwner: Address;
+}
+
+//https://github.com/ton-blockchain/token-contract/blob/main/ft/jetton-minter-discoverable.fc#L133
+message(4) TokenUpdateContent {
+    content: Cell;
+}
+
+message(0xf8a7ea5) TokenTransfer {
+    query_id: Int as uint64;
+    amount: Int as coins;
+    destination: Address;
+    response_destination: Address?;
+    custom_payload: Cell?;
+    forward_ton_amount: Int as coins;
+    forward_payload: Slice as remaining;
+}
+
+message(0x178d4519) TokenTransferInternal {
+    query_id: Int as uint64;
+    amount: Int as coins;
+    from: Address;
+    response_destination: Address?;
+    forward_ton_amount: Int as coins;
+    forward_payload: Slice as remaining;
+}
+
+message(0x7362d09c) TokenNotification {
+    query_id: Int as uint64;
+    amount: Int as coins;
+    from: Address;
+    forward_payload: Slice as remaining;
+}
+
+message(0x595f07bc) TokenBurn {
+    query_id: Int as uint64;
+    amount: Int as coins;
+    response_destination: Address;
+    custom_payload: Cell?;
+}
+
+message(0x7bdd97de) TokenBurnNotification {
+    query_id: Int as uint64;
+    amount: Int as coins;
+    sender: Address;
+    response_destination: Address;
+}
+
+message(0xd53276db) TokenExcesses {
+    query_id: Int as uint64;
+}
+
+message(0x2c76b973) ProvideWalletAddress {
+    query_id: Int as uint64;
+    owner_address: Address;
+    include_address: Bool;
+}
+
+message(0xd1735400) TakeWalletAddress {
+    query_id: Int as uint64;
+    wallet_address: Address;
+    owner_address: Cell?; //It is Maybe ^Address, just encoded it like this
+}
+
+message(21) Mint { //We use opcode 21 to match token-contract.
+    query_id: Int as uint64;
+    amount: Int;
+    receiver: Address;
+}
+```
+

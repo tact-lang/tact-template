@@ -1,0 +1,60 @@
+---
+title: VS Code扩展
+description: 广泛支持Visual Studio 代码中的 Tact 语言：语法高亮、错误诊断、代码片断、悬停信息和更多
+---
+
+在 Visual Studio Code (VSCode) 中为 Tact 语言提供广泛支持：
+
+- [语义语法高亮][l1]
+- [代码补全][l2] [自动导入][l3]、[后缀补全][l4]、片段、[导入补全][l5]
+- 转到 [定义][l6]、实现、[类型定义][l7］
+- 查找所有引用、工作区符号搜索、符号重命名
+- 悬停时的类型和文档
+- [类型][l8]、[参数名][l9] 和 [更多][l10] 的镶嵌提示
+- 具有快速修复功能的即时检查
+- 调用、“initOf ”和结构体初始化内部的签名帮助
+- 带有实现/引用计数的[透镜][l11］
+- 汇编函数的[气体估计][l12］
+- 基于蓝图和 Tact 模板构建和测试项目
+- 集成 Tact 编译器和 [Misti 静态分析器](/ecosystem/misti)
+
+[l1]: https://github.com/tact-lang/tact-language-server/blob/master/docs/manual/features/highlighting.md
+[l2]: https://github.com/tact-lang/tact-language-server/blob/master/docs/manual/features/completion.md
+[l3]: https://github.com/tact-lang/tact-language-server/blob/master/docs/manual/features/completion.md#auto-import
+[l4]: https://github.com/tact-lang/tact-language-server/blob/master/docs/manual/features/completion.md#postfix-completion
+[l5]: https://github.com/tact-lang/tact-language-server/blob/master/docs/manual/features/completion.md#imports-completion
+[l6]: https://github.com/tact-lang/tact-language-server/blob/master/docs/manual/features/navigation.md#go-to-definition
+[l7]: https://github.com/tact-lang/tact-language-server/blob/master/docs/manual/features/navigation.md#go-to-type-definition
+[l8]: https://github.com/tact-lang/tact-language-server/blob/master/docs/manual/features/inlay-hints.md#type-hints
+[l9]: https://github.com/tact-lang/tact-language-server/blob/master/docs/manual/features/inlay-hints.md#parameter-hints
+[l10]: https://github.com/tact-lang/tact-language-server/blob/master/docs/manual/features/inlay-hints.md#additional-hints
+[l11]: https://github.com/tact-lang/tact-language-server/blob/master/docs/manual/features/code-lenses.md
+[l12]: https://github.com/tact-lang/tact-language-server/blob/master/docs/manual/features/gas-calculation.md
+
+## 快速启动
+
+为 VS Code 和基于 VSCode 的编辑器（如 VSCodium、Cursor、Windsurf 等）下载扩展：
+
+- 在 [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=tonstudio.vscode-tact) 上获取。
+- 在 [Open VSX Registry](https://open-vsx.org/extension/tonstudio/vscode-tact) 上获取。
+- 或者从[夜间版本中的`.vsix`文件](https://github.com/tact-lang/tact-language-server/releases)中安装。
+
+对于非基于 VSCode 的编辑器，请安装 [Language Server (LSP Server)](https://github.com/tact-lang/tact-language-server) 。它支持 Sublime Text、(Neo)Vim、Helix 以及其他任何支持 LSP 的编辑器。
+
+## VSCode 安装手册
+
+1. 打开 Visual Studio Code (VSCode)。
+
+2. 点击窗口侧面活动栏中的 “扩展 ”图标，进入扩展视图。它看起来就像一个正方形中的正方形。
+
+3. 在扩展视图中，输入 “Tact 语言”。你会在下拉菜单中看到 [TON Studio](https://tonstudio.io) 提供的扩展 “Tact Language”。你还会看到其他由社区提供的扩展，但你应该使用 TON Studio 提供的扩展，因为它是由 Tact 团队正式支持和开发的。
+
+4. 点击扩展名称旁边的 “安装 ”按钮。等待安装完成。
+
+5. 安装扩展后，你可能需要重新加载 VS Code。你可能会在扩展旁边看到一个 “重新加载”（Reload）按钮。出现该按钮时点击它。
+
+## 参考文献和资源
+
+- [GitHub上的扩展](https://github.com/tact-lang/tact-language-server)
+- [Visual Studio Marketplace 上的扩展](https://marketplace.visualstudio.com/items?itemName=tonstudio.vscode-tact)
+- [开放 VSX 注册表上的扩展](https://open-vsx.org/extension/tonstudio/vscode-tact)

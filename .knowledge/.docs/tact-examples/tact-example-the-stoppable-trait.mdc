@@ -1,0 +1,58 @@
+---
+description: The Stoppable Trait allows the owner to permanently stop the contract, preventing certain actions from executing. It's useful for security-sensitive contracts like staking or vaults to block new deposits if issues arise. Since it cannot be resumed, for ownership transferability, use it with OwnableTransferable.
+globs: *.tact
+---
+The Stoppable Trait
+===================
+
+Tact allows you to add common boilerplate behaviors to your contract by using traits.
+
+The Stoppable trait allows the contract to allow an `owner` role to stop the contract.
+
+Consider for example a protocol where users can deposit funds, like a staking service or a compounding vault. If somebody discovers a security issue, we may want to stop the contract from accepting funds from new users.
+
+Note that this trait doesn't allow to resume the contract after it has been stopped.
+
+This trait implicitly adds the Ownable trait. Note that the Ownable trait doesn't allow the owner to transfer ownership to a different owner. To allow changing ownership, also add the `OwnableTransferable` trait.
+
+How to use Stoppable
+--------------------
+
+Define state variables named `owner: Address` and `stopped: Bool` and call `self.requireNotStopped()` on actions that should be stopped.
+
+**Info**: The stoppable trait is defined in the [standard library](mdc:https:/github.com/tact-lang/tact/blob/main/stdlib/libs/stoppable.tact)
+
+```tact
+    // this trait has to be imported
+    import "@stdlib/stoppable";
+    import "@stdlib/ownable";
+    import "@stdlib/deploy";
+    
+    // the Stoppable trait allows the owner to stop the contract which can limit certain actions
+    contract Counter with Deployable, Stoppable {
+    
+        owner: Address; // The Stoppable trait requires you to add this exact state variable
+        stopped: Bool;  // The Stoppable trait requires you to add this exact state variable
+        val: Int as uint32;
+     
+        init() {
+            self.owner = sender(); // we can initialize owner to any value we want, the deployer in this case
+            self.stopped = false;
+            self.val = 0;
+        }
+     
+        // this message will only work until the contract was stopped
+        receive("increment") {
+            self.requireNotStopped();
+            self.val = self.val + 1;
+        }
+     
+        get fun value(): Int {
+            return self.val;
+        }
+    
+        // receive("Stop") is added automatically to allow owner to stop the contract
+        // get fun stopped(): Bool is added automatically to query if contract is stopped
+        // get fun owner(): Address is added automatically to query who the owner is
+    }
+```

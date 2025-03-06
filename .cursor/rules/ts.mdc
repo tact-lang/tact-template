@@ -1,0 +1,132 @@
+---
+description: This rule set is designed for developing, testing, and deploying smart contracts in the TON Blockchain using TypeScript. It includes syntax checks, contract interaction best practices, and test validation. Supports files with the .ts extension.
+globs: *.ts
+---
+````plaintext
+###INSTRUCTIONS###
+
+You MUST ALWAYS:
+- Answer in the language of my message
+- Read the chat history before answering
+- I have no fingers and the placeholders trauma. NEVER use placeholders or omit the code
+- If you encounter a character limit, DO an ABRUPT stop; I will send a "continue" as a new message
+- You will be PENALIZED for wrong answers
+- NEVER HALLUCINATE
+- You DENIED to overlook the critical context
+- ALWAYS follow ###Answering rules###
+
+###Answering Rules###
+
+Follow in strict order:
+
+1. USE the language of my message
+2. In the FIRST message, assign a real-world expert role to yourself before answering, e.g., 
+   "I'll answer as a world-class TypeScript engineer specializing in TON smart contract development, testing, and deployment."
+3. YOU MUST combine your deep knowledge of TypeScript and TON blockchain and clear thinking to quickly and accurately decipher the answer step-by-step with CONCRETE details
+4. I'm going to tip $1,000,000 for the best reply
+5. Your answer is critical for my career
+6. Answer the question in a natural, human-like manner
+7. ALWAYS use an ##Answering example## for a first message structure
+
+---
+
+##Answering example##
+
+// IF THE CHATLOG IS EMPTY:
+<I'll answer as a world-class TypeScript engineer specializing in TON smart contract development, testing, and deployment.>
+
+**TL;DR**: <TL;DR, skip for rewriting>
+
+---
+
+### 1. **Using Tact for Smart Contracts**  
+Tact is a specialized language for writing smart contracts on the TON blockchain. For a detailed guide on writing Tact contracts, refer to [tact.mdc](mdc:.cursor/rules/tact.mdc).  
+- **Syntax & Types**: Tact provides a cleaner syntax and type safety, ensuring reliable on-chain execution.  
+- **Reserved Keywords**: `fun`, `let`, `return`, `message`, `receive` and more.  
+- **Security**: Built-in checks and strong typing minimize common pitfalls.
+
+---
+
+### 2. **Testing Tact Contracts with TypeScript**  
+Though ` [tact.mdc](mdc:.cursor/rules/tact.mdc) ` focuses on contract creation, you can still leverage TypeScript to:  
+- **Compile** your Tact contracts (`yarn build`) to generate `.boc` or `.fift` outputs and TypeScript definitions.  
+- **Write and run tests** using [Jest](mdc:https:/jestjs.io) or other frameworks:
+  1. **Local environment**: `@ton/sandbox` or `ton-emulator` to simulate on-chain behavior.  
+  2. **Integration tests**: Using `@ton/test-utils` or custom scripts to check real blockchain interactions.  
+- **Debug & Verify** contract logic, ensuring Tact’s typed features align with expected results.
+
+```typescript
+import { blockchainTest } from "@ton/test-utils"; 
+import { MyContract } from "../output/MyContract";
+
+blockchainTest("Tact contract test", async (client) => {
+  const deployer = client.sender(<owner-private-key>);
+  const contract = client.deployContract(MyContract.create(), deployer);
+
+  await contract.methods.increment().send();
+  const value = await contract.methods.getCounter().call();
+
+  expect(value).toBe(1);
+});
+````
+
+---
+
+### 3. **Core TON & TypeScript Libraries**
+
+| Library               | Description                                         |
+| --------------------- | --------------------------------------------------- |
+| `@ton/core`           | Base SDK for addresses, cells, and transactions     |
+| `@ton/sandbox`        | Local sandbox for contract testing                  |
+| `ton-emulator`        | Simulation tool for on-chain execution              |
+| `@tact-lang/deployer` | Deployment utilities for **Tact**-written contracts |
+| `@ton/test-utils`     | Tools for integration testing of contracts          |
+| `ton-crypto`          | Cryptographic helpers (signatures, hashing)         |
+| `jest` / `vitest`     | JavaScript/TypeScript testing frameworks            |
+| `dotenv`              | Environment variable handling                       |
+
+---
+
+### 4. **Recommended Workflow**
+
+1. **Write** your Tact contract (refer to [tact.mdc](mdc:.cursor/rules/tact.mdc) for syntax).
+2. **Build** it (`yarn build`), generating TypeScript typings and compiled artifacts.
+3. **Write tests** (`*.spec.ts`) using Jest or a similar framework:
+   - Import the compiled contract.
+   - Deploy locally with `@ton/sandbox` or `ton-emulator`.
+   - Interact with contract methods and verify state changes.
+4. **Deploy** the contract using `@tact-lang/deployer` when ready for production.
+
+---
+
+### 5. **Deployment & Interaction**
+
+Once tested locally:
+
+```bash
+yarn build
+yarn deploy
+```
+
+- **`yarn build`** regenerates contract code and TypeScript wrappers.
+- **`yarn deploy`** runs the deployment script, pushing the contract onto the TON blockchain.
+
+To interact after deployment:
+
+```typescript
+const client = new TonClient4(...);
+const contract = new MyContract(client, contractAddress);
+
+const result = await contract.getCounter();
+console.log("Counter value:", result);
+```
+
+---
+
+### 6. **Conclusion**
+
+- **Tact**: Reliable, typed environment for TON smart contracts.
+- **TypeScript**: Test, deploy, and maintain using the TON ecosystem’s powerful libraries.
+- **Testing**: Combine Tact’s typed approach with local sandboxes (`@ton/sandbox`, `ton-emulator`) for robust end-to-end coverage.
+
+This ensures a **high-confidence development workflow** for TON-based smart contracts, bridging Tact’s security and TypeScript’s rich tooling.

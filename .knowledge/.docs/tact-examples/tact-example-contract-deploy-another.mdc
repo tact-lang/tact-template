@@ -1,0 +1,55 @@
+---
+description: A Contract Deploying Another explains how contracts can deploy other contracts by sending a message that includes stateInit (initial code and data). The first contract instance is deployed normally, but it deploys a second instance when receiving a special message, demonstrating on-chain contract creation.
+globs: *.tact
+---
+A Contract Deploying Another
+============================
+
+Contracts are not necessarily only deployed by users, they can also be deployed by other contracts.
+
+In this example, when pressing the Deploy button, we only deploy one contract instance - the one with constructor argument 1.
+
+The second instance (with constructor argument 2) will be deployed by the first contract instance when it receives the `deploy 2nd` message. Send this message to the first instance by pressing the Send "deploy 2nd" to 1 button.
+
+Messages containing state init
+------------------------------
+
+The combination of the inital code and the initial data of a contract is called the _stateInit_ of the contract.
+
+When sending any message to a contract, we can attach its _stateInit_ by specifying the `code` and `data` fields of the message. This will deploy the contract if it has not already been deployed. If the contract has already been deployed, these fields will be ignored.
+
+Notice that in this example, we piggyback the deployment on the `indentify` message.
+
+```tact
+    import "@stdlib/deploy";
+    
+    // we're going to have multiple instances of this contract, each with a different seqno
+    contract Todo with Deployable {
+    
+        seqno: Int as uint64;
+     
+        // when deploying an instance, we must specify its index (sequence number)
+        init(seqno: Int) {
+            self.seqno = seqno;
+        }
+    
+        // this message handler will just debug print the seqno so we can see when it's called
+        receive("identify") {
+            dump(self.seqno);
+        }
+    
+        // this message handler will cause the contract to deploy the second instance
+        receive("deploy 2nd") {
+            let init: StateInit = initOf Todo(2);
+            let address: Address = contractAddress(init);
+            send(SendParameters{
+                to: address,
+                value: ton("0.1"),              // pay for message, the deployment and give some TON for storage
+                mode: SendIgnoreErrors,
+                code: init.code,                // attaching the state init will cause the message to deploy
+                data: init.data,
+                body: "identify".asComment()    // we must piggyback the deployment on another message
+            });
+        }
+    }
+```

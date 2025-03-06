@@ -824,6 +824,15 @@
     form-data "^4.0.0"
     zod "^3.20.6"
 
+"@tact-lang/emulator@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@tact-lang/emulator/-/emulator-4.3.0.tgz#f221f81268f66a4b19acfb0ed6a7f7f643a94a5a"
+  integrity sha512-r0i92vyxgz+pQh+AtfXdVKUnM0XcsJevfyLn255hJvfAXQj+fqP7b083qDeoKFveHnxI7reakimCfZXBl73x6Q==
+  dependencies:
+    prando "^6.0.1"
+    teslabot "^1.5.0"
+    zod "^3.20.2"
+
 "@tact-lang/opcode@^0.0.16":
   version "0.0.16"
   resolved "https://registry.yarnpkg.com/@tact-lang/opcode/-/opcode-0.0.16.tgz#cc9e4117ce706d8bb6e054a520bab719f70adf96"
@@ -3668,7 +3677,7 @@ symbol.inspect@1.0.1:
   resolved "https://registry.yarnpkg.com/symbol.inspect/-/symbol.inspect-1.0.1.tgz#e13125b8038c4996eb0dfa1567332ad4dcd0763f"
   integrity sha512-YQSL4duoHmLhsTD1Pw8RW6TZ5MaTX5rXJnqacJottr2P2LZBF/Yvrc3ku4NUpMOm8aM0KOCqM+UAkMA5HWQCzQ==
 
-teslabot@^1.3.0:
+teslabot@^1.3.0, teslabot@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/teslabot/-/teslabot-1.5.0.tgz#70f544516699ca5f696d8ae94f3d12cd495d5cd6"
   integrity sha512-e2MmELhCgrgZEGo7PQu/6bmYG36IDH+YrBI1iGm6jovXkeDIGa3pZ2WSqRjzkuw2vt1EqfkZoV5GpXgqL8QJVg==
@@ -3698,6 +3707,34 @@ to-regex-range@^5.0.1:
   integrity sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==
   dependencies:
     is-number "^7.0.0"
+
+ton-abi@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/ton-abi/-/ton-abi-0.0.2.tgz#57e624e2ce319eb65b5eeb1972ea5dfb88736738"
+  integrity sha512-RDlSNDFgC8K+aavCMO8w+AsRFK7RvKldbVpfk4neQrDLpn8DtUbDeHp0p9xoL2PhVNe6wUws8qonngzMbNLjHg==
+
+ton-core@^0.53.0:
+  version "0.53.0"
+  resolved "https://registry.yarnpkg.com/ton-core/-/ton-core-0.53.0.tgz#88ce0c0dbdbb548cd46f1984639c4738b06f38dd"
+  integrity sha512-uO/U1oVLdEliWWbwfNQQK+61C+KM0ehcTdHQ6cN0WSEH2UzGfdVFpC4Wb0ph+wUYe/5njl7TA0uL9nif9Q6qwA==
+  dependencies:
+    symbol.inspect "1.0.1"
+
+ton-crypto-primitives@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ton-crypto-primitives/-/ton-crypto-primitives-2.0.0.tgz#e85cd68c0d523f6bdf3f306201a76e51b7e9312e"
+  integrity sha512-K+qKjpS0h9sPW6oExcpxnzuQ7nEgHEiDKwIqE/jWD25o8iFGe3FWj1gKxFNbKE9wwYKc5IV8FwrU+raF0KO5nQ==
+  dependencies:
+    jssha "3.2.0"
+
+ton-crypto@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/ton-crypto/-/ton-crypto-3.2.0.tgz#cf8cd5410d8f04b04b359f80415b11efb312c60e"
+  integrity sha512-fltdBNQ45gARMuGMEOjPZWPJ5eSql8p3CA0Dj7tPv5lhU5ziT8SxXLAzDraR9HJ8YpjBHLVvYyhMLRiEwxgtMQ==
+  dependencies:
+    jssha "3.2.0"
+    ton-crypto-primitives "2.0.0"
+    tweetnacl "1.0.3"
 
 tr46@~0.0.3:
   version "0.0.3"
@@ -3949,6 +3986,11 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zod@^3.20.2:
+  version "3.24.2"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.24.2.tgz#8efa74126287c675e92f46871cfc8d15c34372b3"
+  integrity sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==
 
 zod@^3.20.6, zod@^3.22.4:
   version "3.22.4"
