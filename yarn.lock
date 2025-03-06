@@ -682,14 +682,13 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@nowarp/misti@~0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@nowarp/misti/-/misti-0.5.0.tgz#e25e882fba99fa6c37abd4557a7bdbcc3a7cd05a"
-  integrity sha512-gx1IO8+8YQEsU2M8TWJfQ24K55aIpCUkMzXNJuEe2fL/fECp76+4nx/2wAG8XjL2WNIB1CuL9vLcNWy2dzafIg==
+"@nowarp/misti@~0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@nowarp/misti/-/misti-0.7.1.tgz#f78b13db27854199a1a3743e78a16bba78d9da2a"
+  integrity sha512-cgVq1p8ASFH4GTn1/h7ECn/bR5x0e/2L0zuTE9nUTjXsEJNaqXa2xfM24IlhI6D1O+EsDSOG2cqGbCIohIu3qw==
   dependencies:
     "@nowarp/souffle" "^0.1.2"
-    "@tact-lang/compiler" "~1.5.1"
-    "@ton/core" "~0.59.0"
+    "@tact-lang/compiler" "~1.6.1"
     "@types/benchmark" "^2.1.5"
     "@types/fs-extra" "^11.0.4"
     "@types/json-bigint" "^1.0.4"
@@ -698,7 +697,6 @@
     fs-extra "^11.2.0"
     ignore "^6.0.2"
     json-bigint "^1.0.0"
-    ohm-js "^17.1.0"
     zod "^3.22.4"
 
 "@nowarp/souffle@^0.1.2":
@@ -778,33 +776,13 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@tact-lang/compiler@~1.5.1":
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.5.2.tgz#eece10634091eb31fa2f1b5453ede867cf68af9e"
-  integrity sha512-i6FONPYpM4hYujmrhtyXtcNA7UkDOcgWbHUCFvHT4+RFwPFHlwbq7gdDWDP4dgW6uMLoNt+JUL/o62Ho+rJn0Q==
-  dependencies:
-    "@tact-lang/opcode" "^0.0.16"
-    "@ton/core" "0.58.1"
-    "@ton/crypto" "^3.2.0"
-    blockstore-core "1.0.5"
-    change-case "^4.1.2"
-    crc-32 "1.2.2"
-    ipfs-unixfs-importer "9.0.10"
-    json-bigint "^1.0.0"
-    meow "^13.2.0"
-    mkdirp "^2.1.3"
-    ohm-js "^17.1.0"
-    path-normalize "^6.0.13"
-    prando "^6.0.1"
-    zod "^3.22.4"
-
-"@tact-lang/compiler@~1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.6.0.tgz#e5ec8fe606d4eca812f5f9042df76dac92ff086e"
-  integrity sha512-rJ6HcBLlk3onyYozX+5rlNMDurUD8TGFirSPeQjlDChPA4tWNolU6NpRNdlFx/Ac0/bCRjMF99UJ8+LRF7oQbQ==
+"@tact-lang/compiler@^1.6.1", "@tact-lang/compiler@~1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.6.1.tgz#a375914ad53b4bb56312a204d27aff14e8491b1a"
+  integrity sha512-EgC3dD/Nje90VHaPB4qLqAZolbf3LE0gyC6JGrWy+IOClEciAYgGZhNzE6UQam/m+K1LfCqurDv1GESq1x1Efw==
   dependencies:
     "@tact-lang/opcode" "^0.3.0"
-    "@ton/core" "0.60.0"
+    "@ton/core" "0.60.1"
     "@ton/crypto" "^3.2.0"
     "@tonstudio/parser-runtime" "^0.0.1"
     blockstore-core "1.0.5"
@@ -824,11 +802,6 @@
     form-data "^4.0.0"
     zod "^3.20.6"
 
-"@tact-lang/opcode@^0.0.16":
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/@tact-lang/opcode/-/opcode-0.0.16.tgz#cc9e4117ce706d8bb6e054a520bab719f70adf96"
-  integrity sha512-YJTUjoDOy+e+FHHppJiF+uWJ2IMjVknB9VQ5n78pknCE129DazCb/nFXnw0wVRDVcn8Tn59ky+pmjiQjQOjEbw==
-
 "@tact-lang/opcode@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@tact-lang/opcode/-/opcode-0.3.0.tgz#c127b420a71bfeb383e0954b0de325f5e260c803"
@@ -847,21 +820,7 @@
   resolved "https://registry.yarnpkg.com/@tact-lang/ton-jest/-/ton-jest-0.0.4.tgz#c87604669ed0c6b4ba1a2e6f06616e267f7fc8ca"
   integrity sha512-FWjfiNvhMlE44ZLLL7tgmHbrszMTPMttmYiaTekf1vwFXV3uAOawM8xM9NldYaCVs9eh8840PjgISdMMUTCSCw==
 
-"@ton/core@0.58.1":
-  version "0.58.1"
-  resolved "https://registry.yarnpkg.com/@ton/core/-/core-0.58.1.tgz#f6f2ecef6a7149bcd23825bfbb454f116d54363f"
-  integrity sha512-zydh42iT6E3U3Ky/DhTFqJMN/ycKKzbsHASY257Qr2sZn97G/MOcHFizPfMnbJJgx0H9iHX6mdyMvp1IKBVAFA==
-  dependencies:
-    symbol.inspect "1.0.1"
-
-"@ton/core@0.60.0":
-  version "0.60.0"
-  resolved "https://registry.yarnpkg.com/@ton/core/-/core-0.60.0.tgz#7968d6a53b63c81149b5b4c91725518bc88a2f87"
-  integrity sha512-vK0itrieVashNQ7geqpvlWcOyXsXKKtIo6h02HcVcMeNo+QxovBaDAvou3BUKDnf7ej6+rRSuXMSOIjBct/zIg==
-  dependencies:
-    symbol.inspect "1.0.1"
-
-"@ton/core@^0.60.0":
+"@ton/core@0.60.1", "@ton/core@^0.60.0":
   version "0.60.1"
   resolved "https://registry.yarnpkg.com/@ton/core/-/core-0.60.1.tgz#cc9a62fb308d7597b1217dc8e44c7e2dcc0aceaa"
   integrity sha512-8FwybYbfkk57C3l9gvnlRhRBHbLYmeu0LbB1z9N+dhDz0Z+FJW8w0TJlks8CgHrAFxsT3FlR2LsqFnsauMp38w==
@@ -872,13 +831,6 @@
   version "0.56.3"
   resolved "https://registry.yarnpkg.com/@ton/core/-/core-0.56.3.tgz#1162764573abb76032eba70f8497e5cb2ea532ee"
   integrity sha512-HVkalfqw8zqLLPehtq0CNhu5KjVzc7IrbDwDHPjGoOSXmnqSobiWj8a5F+YuWnZnEbQKtrnMGNOOjVw4LG37rg==
-  dependencies:
-    symbol.inspect "1.0.1"
-
-"@ton/core@~0.59.0":
-  version "0.59.0"
-  resolved "https://registry.yarnpkg.com/@ton/core/-/core-0.59.0.tgz#58da9fcaa58e5a0c705b63baf1e86cab6e196689"
-  integrity sha512-LSIkGst7BoY7fMWshejzcH0UJnoW21JGlRrW0ch+6A7Xb/7EuekxgdKym7fHxcry6OIf6FoeFg97lJ960N/Ghg==
   dependencies:
     symbol.inspect "1.0.1"
 
@@ -1644,11 +1596,6 @@ convert-source-map@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/convert-source-map/-/convert-source-map-2.0.0.tgz#4b560f649fc4e918dd0ab75cf4961e8bc882d82a"
   integrity sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==
-
-crc-32@1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/crc-32/-/crc-32-1.2.2.tgz#3cad35a934b8bf71f25ca524b6da51fb7eace2ff"
-  integrity sha512-ROmzCKrTnOwybPcJApAA6WBWij23HVfGVNKqqrZpuyZOHqK2CwHSvpGuyt/UNNvaIjEd8X5IFGp4Mh+Ie1IHJQ==
 
 create-jest@^29.7.0:
   version "29.7.0"
@@ -3007,11 +2954,6 @@ makeerror@1.0.12:
   dependencies:
     tmpl "1.0.5"
 
-meow@^13.2.0:
-  version "13.2.0"
-  resolved "https://registry.yarnpkg.com/meow/-/meow-13.2.0.tgz#6b7d63f913f984063b3cc261b6e8800c4cd3474f"
-  integrity sha512-pxQJQzB6djGPXh08dacEloMFopsOqGVRKFPYvPOt9XDZ1HasbgDZA74CJGreSU4G3Ak7EFJGoiH2auq+yXISgA==
-
 merge-options@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/merge-options/-/merge-options-3.0.4.tgz#84709c2aa2a4b24c1981f66c179fe5565cc6dbb7"
@@ -3080,11 +3022,6 @@ minimist@^1.2.5:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
   integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
-
-mkdirp@^2.1.3:
-  version "2.1.6"
-  resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-2.1.6.tgz#964fbcb12b2d8c5d6fbc62a963ac95a273e2cc19"
-  integrity sha512-+hEnITedc8LAtIP9u3HJDFIdcLV2vXP33sqLLIzkv1Db1zO/1OxbvYf0Y1OC/S/Qo5dxHXepofhmxL02PsKe+A==
 
 ms@2.1.2:
   version "2.1.2"
