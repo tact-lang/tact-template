@@ -15,13 +15,7 @@ contract SampleTactContract(
 
     // empty receiver for deployment
     receive() {
-        // cashback
-        message(MessageParameters {
-            to: sender(),
-            mode: SendRemainingValue,
-            value: 0,
-            bounce: false,
-        });
+        cashback(sender());
     }
 
     receive(_: Increment) {
