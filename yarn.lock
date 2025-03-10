@@ -776,7 +776,24 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@tact-lang/compiler@^1.6.1", "@tact-lang/compiler@~1.6.1":
+"@tact-lang/compiler@^1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.6.2.tgz#a949a9099e4014b64148d6323826b8b8e8085d05"
+  integrity sha512-Qo8ooKWxLWy6o1ePdiyCo1+hdaX5rm1qoUs+S/L9R+wV7SpODYM1dHtKE3RkvyuItnBsl9WokgnkWzlC4qnMVQ==
+  dependencies:
+    "@tact-lang/opcode" "^0.3.0"
+    "@ton/core" "0.60.1"
+    "@ton/crypto" "^3.2.0"
+    "@tonstudio/parser-runtime" "^0.0.1"
+    blockstore-core "1.0.5"
+    change-case "^4.1.2"
+    ipfs-unixfs-importer "9.0.10"
+    json-bigint "^1.0.0"
+    ohm-js "^17.1.0"
+    path-normalize "^6.0.13"
+    zod "^3.22.4"
+
+"@tact-lang/compiler@~1.6.1":
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.6.1.tgz#a375914ad53b4bb56312a204d27aff14e8491b1a"
   integrity sha512-EgC3dD/Nje90VHaPB4qLqAZolbf3LE0gyC6JGrWy+IOClEciAYgGZhNzE6UQam/m+K1LfCqurDv1GESq1x1Efw==
