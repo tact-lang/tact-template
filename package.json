@@ -13,7 +13,7 @@
     "@tact-lang/deployer": "^0.2.0",
     "@tact-lang/ton-abi": "^0.0.3",
     "@tact-lang/ton-jest": "^0.0.4",
-    "@ton/core": "~0.56.3",
+    "@ton/core": "^0.60.1",
     "@ton/crypto": "^3.2.0",
     "@ton/sandbox": "^0.20.0",
     "@ton/test-utils": "^0.4.2",
@@ -34,8 +34,8 @@
   },
   "devDependencies": {
     "eslint": "^9.19.0",
-    "typescript-eslint": "^8.22.0",
-    "globals": "^13.24.0"
+    "globals": "^13.24.0",
+    "typescript-eslint": "^8.22.0"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
