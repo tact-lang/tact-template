@@ -776,10 +776,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@tact-lang/compiler@^1.6.2":
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.6.2.tgz#a949a9099e4014b64148d6323826b8b8e8085d05"
-  integrity sha512-Qo8ooKWxLWy6o1ePdiyCo1+hdaX5rm1qoUs+S/L9R+wV7SpODYM1dHtKE3RkvyuItnBsl9WokgnkWzlC4qnMVQ==
+"@tact-lang/compiler@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.6.3.tgz#ab2073c8190accb53d7bd9ab2e6c339564f6b939"
+  integrity sha512-TLskaEiipGOM4Y93tYVH1xxLpm4gFuB11RxyrYYfJoZ7A5qPXT9IF9fZXP+niUdUlxXuzS3zS1Yc4O4hs9eK4A==
   dependencies:
     "@tact-lang/opcode" "^0.3.0"
     "@ton/core" "0.60.1"
@@ -789,7 +789,6 @@
     change-case "^4.1.2"
     ipfs-unixfs-importer "9.0.10"
     json-bigint "^1.0.0"
-    ohm-js "^17.1.0"
     path-normalize "^6.0.13"
     zod "^3.22.4"
 
@@ -876,10 +875,10 @@
     jssha "3.2.0"
     tweetnacl "1.0.3"
 
-"@ton/sandbox@^0.20.0":
-  version "0.20.0"
-  resolved "https://registry.yarnpkg.com/@ton/sandbox/-/sandbox-0.20.0.tgz#229ef12bd99b313b91003393890cdb01262189b5"
-  integrity sha512-uci6DRDZGW1eu+hHgbVzf4lDTi29PV+5XKPC8ZyYUJaoOtulkHDtgyrfZ1H5QSOVOmUIjHDQhPwLsn1kU51yHw==
+"@ton/sandbox@^0.27.0":
+  version "0.27.1"
+  resolved "https://registry.yarnpkg.com/@ton/sandbox/-/sandbox-0.27.1.tgz#ed24f07ac8c463d9d921faf96db147072d7a55c1"
+  integrity sha512-wgCq92wrAC64WdhcolDboK1cDLj0IQe2vtLklc4GJAMcfMGDAenPkcae9T7ihP6Bz6UvFLWOIgwpapDuUQ7ndQ==
 
 "@ton/test-utils@^0.4.2":
   version "0.4.2"
