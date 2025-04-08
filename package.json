@@ -4,12 +4,12 @@
     "build": "tact --config ./tact.config.json",
     "lint": "yarn misti ./tact.config.json",
     "test": "yarn build && jest",
-    "deploy": "ts-node ./sources/contract.deploy.ts",
+    "deploy": "yarn test && ts-node ./sources/contract.deploy.ts",
     "read": "ts-node ./sources/contract.read.ts"
   },
   "dependencies": {
-    "@nowarp/misti": "~0.7.1",
-    "@tact-lang/compiler": "^1.6.3",
+    "@nowarp/misti": "~0.8.0",
+    "@tact-lang/compiler": "^1.6.5",
     "@tact-lang/deployer": "^0.2.0",
     "@tact-lang/ton-abi": "^0.0.3",
     "@tact-lang/ton-jest": "^0.0.4",
