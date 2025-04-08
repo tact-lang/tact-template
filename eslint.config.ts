@@ -35,7 +35,14 @@ export default [
       "@typescript-eslint/no-unsafe-assignment": "error",
       "@typescript-eslint/no-unsafe-member-access": "error",
       "@typescript-eslint/no-unsafe-call": "error",
-      "@typescript-eslint/no-unsafe-return": "error"
+      "@typescript-eslint/no-unsafe-return": "error",
+      "no-restricted-imports": [
+        "error",
+        {
+          "paths": ["@ton/blueprint"],
+          "patterns": ["@ton/blueprint/*"]
+        }
+      ]
     }
   }
 ]; 
