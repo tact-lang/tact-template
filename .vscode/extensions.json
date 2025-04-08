@@ -1,6 +1,6 @@
 {
     "recommendations": [
-      "KonVik.tact-lang-vscode",
+      "tonstudio.vscode-tact",
       "tonwhales.func-vscode",
       "dbaeumer.vscode-eslint"
     ]
