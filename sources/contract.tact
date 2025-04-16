@@ -12,7 +12,6 @@ contract SampleTactContract(
     owner: Address,
     counter: Int as uint32,
 ) with Ownable {
-
     // empty receiver for deployment
     receive() {
         cashback(sender());
