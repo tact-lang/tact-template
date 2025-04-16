@@ -36,6 +36,14 @@ If you want to quickly check your changes for validity, run:
 yarn lint
 ```
 
+This check will run the Tact source code formatter in the style checking mode and the [misti](https://github.com/nowarp/misti) static analyzer to check for common issues.
+
+If you'd like to format the Tact source code in the [sources](./sources) directory, run:
+
+```shell
+yarn fmt
+```
+
 ## Deployment
 
 To deploy a contract, follow these steps:
