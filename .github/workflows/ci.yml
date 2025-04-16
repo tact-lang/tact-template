@@ -39,7 +39,7 @@ jobs:
         run: yarn build
 
       - name: Run Tact formatter
-        run: yarn fmt --check
+        run: yarn tact-fmt --check ./sources
 
       - name: Run Misti
         run: yarn misti --min-severity medium ./tact.config.json
