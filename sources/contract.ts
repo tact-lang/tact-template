@@ -43,6 +43,7 @@ const testDeploy = (fromInitContract: FromInitContract) => {
         const setup = async () => {
             return await globalSetup(fromInitContract);
         };
+        
         it("should deploy correctly", async () => {
             const { contract } = await setup();
 
