@@ -13,7 +13,10 @@ contract SampleTactContract(
     counter: Int as uint32,
 ) with Ownable {
     // empty receiver for deployment and receiving funds
-    receive() {}
+    receive() {
+        // return the amount to the sender
+        cashback(sender());
+    }
 
     receive(_: Increment) {
         self.add(1);
