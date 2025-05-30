@@ -16,7 +16,7 @@ describe("contract", () => {
             to: contract.address,
             deploy: true,
             success: true,
-        });
+        }); 
 
         // Check counter
         expect(await contract.getCounter()).toEqual(0n);
