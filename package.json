@@ -2,8 +2,8 @@
     "private": true,
     "scripts": {
         "build": "tact --config ./tact.config.json",
-        "fmt": "tact-fmt --write ./sources",
-        "lint": "tact-fmt --check ./sources && yarn misti ./tact.config.json",
+        "fmt": "prettier --write ./sources && tact-fmt --write ./sources",
+        "lint": "prettier --check ./sources && tact-fmt --check ./sources && yarn misti ./tact.config.json",
         "test": "yarn build && jest",
         "deploy": "yarn test && ts-node ./sources/contract.deploy.ts",
         "read": "ts-node ./sources/contract.read.ts"
