@@ -776,10 +776,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@tact-lang/compiler@^1.6.11":
-  version "1.6.11"
-  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.6.11.tgz#77b5dc65983e409725c7e212eb715ddcff7d4c67"
-  integrity sha512-HaFkltPHyvCeO3c+GHmtdISOI2RVa/AF9PbVWX3GRfPNOaePeD4Tu9k2sTeZb7Rw5RtXvT2BFpGiXJhHWiKhPQ==
+"@tact-lang/compiler@^1.6.13":
+  version "1.6.13"
+  resolved "https://registry.yarnpkg.com/@tact-lang/compiler/-/compiler-1.6.13.tgz#b2f7e6eb75b52fea052369d8ac34c061f63d5c99"
+  integrity sha512-lrgT/kCgC+nuppB4zPSDCAcLQ6EauTJ3NEBX4prEBBRmJ8aexYAfFUfVayskZw96JrDjReNIhnD8dG/yU0Fk+w==
   dependencies:
     "@tact-lang/opcode" "^0.3.0"
     "@ton/core" "0.60.1"

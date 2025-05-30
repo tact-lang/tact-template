@@ -2,15 +2,15 @@
     "private": true,
     "scripts": {
         "build": "tact --config ./tact.config.json",
-        "fmt": "tact-fmt --write ./sources",
-        "lint": "tact-fmt --check ./sources && yarn misti ./tact.config.json",
+        "fmt": "prettier --write ./sources && tact-fmt --write ./sources",
+        "lint": "prettier --check ./sources && tact-fmt --check ./sources && yarn misti ./tact.config.json",
         "test": "yarn build && jest",
         "deploy": "yarn test && ts-node ./sources/contract.deploy.ts",
         "read": "ts-node ./sources/contract.read.ts"
     },
     "dependencies": {
         "@nowarp/misti": "~0.8.0",
-        "@tact-lang/compiler": "^1.6.11",
+        "@tact-lang/compiler": "^1.6.13",
         "@tact-lang/deployer": "^0.2.0",
         "@tact-lang/ton-abi": "^0.0.3",
         "@tact-lang/ton-jest": "^0.0.4",
