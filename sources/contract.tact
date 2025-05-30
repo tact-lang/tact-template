@@ -13,7 +13,7 @@ contract SampleTactContract(
     counter: Int as uint32,
 ) with Ownable {
     // empty receiver for deployment and receiving funds
-    receive() { }
+    receive() {}
 
     receive(_: Increment) {
         self.add(1);
