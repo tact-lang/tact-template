@@ -8,7 +8,7 @@ import { SampleTactContract } from "./output/sample_SampleTactContract";
 const globalSetup = async () => {
     const blockchain = await Blockchain.create();
 
-    // --- if we don't test storage prices, we need to set them to 0 --- 
+    // --- if we don't test storage prices, we need to set them to 0 ---
     const storagePricesDict = Dictionary.empty<number, StoragePrices>();
 
     storagePricesDict.set(0, {
@@ -28,7 +28,7 @@ const globalSetup = async () => {
     blockchain.setConfig(updatedConfig);
     // ---
 
-    const owner = await blockchain.treasury('admin');
+    const owner = await blockchain.treasury("admin");
     const nonOwner = await blockchain.treasury("non-owner");
 
     const contract: SandboxContract<SampleTactContract> = blockchain.openContract(
