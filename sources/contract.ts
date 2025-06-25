@@ -4,9 +4,7 @@ import "@ton/test-utils";
 import { SampleTactContract } from "./output/sample_SampleTactContract";
 import { setStoragePrices } from "./gas-utils";
 
-type FromInitContract = (owner: Address, counter: bigint) => Promise<SampleTactContract>;
-
-const globalSetup = async (fromInitContract: FromInitContract) => {
+const globalSetup = async () => {
     const blockchain = await Blockchain.create();
 
     // if we don't test storage prices, we need to set them to 0
@@ -22,8 +20,9 @@ const globalSetup = async (fromInitContract: FromInitContract) => {
 
     const owner = await blockchain.treasury("owner");
     const nonOwner = await blockchain.treasury("non-owner");
+    
     const contract: SandboxContract<SampleTactContract> = blockchain.openContract(
-        await fromInitContract(owner.address, 0n)
+        await SampleTactContract.fromInit(owner.address, 0n)
     );
 
     const deployResult = await contract.send(owner.getSender(), { value: toNano(1) }, null);
@@ -38,10 +37,10 @@ const globalSetup = async (fromInitContract: FromInitContract) => {
     return { blockchain, owner, nonOwner, contract };
 };
 
-const testDeploy = (fromInitContract: FromInitContract) => {
+const testDeploy = () => {
     describe("test deploy", () => {
         const setup = async () => {
-            return await globalSetup(fromInitContract);
+            return await globalSetup();
         };
 
         it("should deploy correctly", async () => {
@@ -53,9 +52,9 @@ const testDeploy = (fromInitContract: FromInitContract) => {
     });
 };
 
-const testIncrement = (fromInitContract: FromInitContract) => {
+const testIncrement = () => {
     const setup = async () => {
-        return await globalSetup(fromInitContract);
+        return await globalSetup();
     };
 
     describe("test increment", () => {
@@ -85,9 +84,9 @@ const testIncrement = (fromInitContract: FromInitContract) => {
     });
 };
 
-const testAdd = (fromInitContract: FromInitContract) => {
+const testAdd = () => {
     const setup = async () => {
-        return await globalSetup(fromInitContract);
+        return await globalSetup();
     };
 
     describe("test add", () => {
@@ -121,8 +120,8 @@ const testAdd = (fromInitContract: FromInitContract) => {
     });
 };
 
-export const testContract = (fromInitContract: FromInitContract) => {
-    testDeploy(fromInitContract);
-    testIncrement(fromInitContract);
-    testAdd(fromInitContract);
+export const testContract = () => {
+    testDeploy();
+    testIncrement();
+    testAdd();
 };
