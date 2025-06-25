@@ -20,7 +20,7 @@ const globalSetup = async () => {
 
     const owner = await blockchain.treasury("owner");
     const nonOwner = await blockchain.treasury("non-owner");
-    
+
     const contract: SandboxContract<SampleTactContract> = blockchain.openContract(
         await SampleTactContract.fromInit(owner.address, 0n)
     );
