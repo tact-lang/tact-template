@@ -1,24 +1,34 @@
-import { Address, toNano } from "@ton/core";
+import { toNano, Dictionary } from "@ton/core";
 import { Blockchain, SandboxContract } from "@ton/sandbox";
+import { updateConfig } from "@ton/sandbox";
+import { StoragePrices } from "@ton/sandbox/dist/config/config.tlb-gen";
 import "@ton/test-utils";
 import { SampleTactContract } from "./output/sample_SampleTactContract";
-import { setStoragePrices } from "./gas-utils";
 
 const globalSetup = async () => {
     const blockchain = await Blockchain.create();
 
-    // if we don't test storage prices, we need to set them to 0
-    blockchain.setConfig(
-        setStoragePrices(blockchain.config, {
-            unixTimeSince: 0,
-            bitPricePerSecond: 0n,
-            cellPricePerSecond: 0n,
-            masterChainBitPricePerSecond: 0n,
-            masterChainCellPricePerSecond: 0n,
-        })
-    );
+    // --- if we don't test storage prices, we need to set them to 0 --- 
+    const storagePricesDict = Dictionary.empty<number, StoragePrices>();
 
-    const owner = await blockchain.treasury("owner");
+    storagePricesDict.set(0, {
+        kind: "StoragePrices",
+        utime_since: 0,
+        bit_price_ps: 0n,
+        _cell_price_ps: 0n,
+        mc_bit_price_ps: 0n,
+        mc_cell_price_ps: 0n,
+    });
+
+    const updatedConfig = updateConfig(blockchain.config, {
+        kind: "ConfigParam__18",
+        anon0: storagePricesDict,
+    });
+
+    blockchain.setConfig(updatedConfig);
+    // ---
+
+    const owner = await blockchain.treasury('admin');
     const nonOwner = await blockchain.treasury("non-owner");
 
     const contract: SandboxContract<SampleTactContract> = blockchain.openContract(
