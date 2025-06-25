@@ -28,7 +28,7 @@ const globalSetup = async () => {
     blockchain.setConfig(updatedConfig);
     // ---
 
-    const owner = await blockchain.treasury("admin");
+    const owner = await blockchain.treasury("owner");
     const nonOwner = await blockchain.treasury("non-owner");
 
     const contract: SandboxContract<SampleTactContract> = blockchain.openContract(
