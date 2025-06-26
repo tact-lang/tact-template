@@ -14,7 +14,7 @@
         "@tact-lang/deployer": "^0.2.0",
         "@tact-lang/ton-abi": "^0.0.3",
         "@tact-lang/ton-jest": "^0.0.4",
-        "@ton/core": "^0.60.1",
+        "@ton/core": "^0.61.0",
         "@ton/crypto": "^3.2.0",
         "@ton/sandbox": "^0.27.0",
         "@ton/test-utils": "^0.4.2",
