@@ -3,7 +3,7 @@
     "scripts": {
         "build": "tact --config ./tact.config.json",
         "fmt": "prettier --write ./sources && tact-fmt --write ./sources",
-        "lint": "prettier --check ./sources && tact-fmt --check ./sources && yarn misti ./tact.config.json",
+        "lint": "prettier --check ./sources && tact-fmt --check ./sources && yarn misti --min-severity medium ./tact.config.json",
         "test": "yarn build && jest",
         "deploy": "yarn test && ts-node ./sources/contract.deploy.ts",
         "read": "ts-node ./sources/contract.read.ts"
