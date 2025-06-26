@@ -8,7 +8,7 @@ import { SampleTactContract } from "./output/sample_SampleTactContract";
 const globalSetup = async () => {
     const blockchain = await Blockchain.create();
 
-    // --- if we don't test storage prices, we need to set them to 0 ---
+    //  --- Set storage prices to 0 if they are not being tested --- 
     const storagePricesDict = Dictionary.empty<number, StoragePrices>();
 
     storagePricesDict.set(0, {
